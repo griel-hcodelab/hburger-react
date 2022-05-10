@@ -1,0 +1,45 @@
+@use 'components';
+
+#app {
+    section {
+        main {
+            section {
+                form {
+                    div {
+                        &#alert {
+                            &.error {
+                                @include components.error;
+                                display: none;
+                            }
+                            &.success {
+                                @include components.success;
+                                display: none;    
+                            }
+                        }
+                    }
+                }
+                div {
+                    &.paymentProcess {
+                        justify-content: center;
+                        align-items: center;
+                        width: 100%;
+                        height: 100%;
+                        color: #000;
+                        font-size: 30px;
+                    }
+                }
+            }
+        }
+        footer {
+            button {
+                &:disabled {
+                    opacity: 0.5;
+                    cursor: not-allowed!important;
+                    &:active {
+                        background-color: inherit;
+                    }
+                }
+            }
+        }
+    }
+}
