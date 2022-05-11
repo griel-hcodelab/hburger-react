@@ -137,7 +137,7 @@
             margin-top: var(--space);
         }
     }
-    @media (min-width: vars.$desktopStartWidth) {
+    @media (min-width: 768px) {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
         grid-gap: var(--space);
@@ -147,10 +147,10 @@
             }
         }
     }
-    @media (min-width: vars.$desktopStartWidth * 1.5) {
+    @media (min-width: calc(768px * 1.5)) {
         grid-template-columns: repeat(3, 1fr);
     }
-    @media (min-width: vars.$desktopStartWidth * 2) {
+    @media (min-width: calc(768px * 2)) {
         grid-template-columns: repeat(4, 1fr);
     }
 }
