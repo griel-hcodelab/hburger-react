@@ -1,11 +1,12 @@
+import Button from "../Button"
+import { Title } from "../Title"
+
 export const Carte = () => {
     return (
         <>
         
-        <main className="carte" id="carte">
-            <header>
-                <h1>Monte o seu <span>Hburger</span></h1>
-            </header>
+        <main>
+            <Title text={<h1>Monte o seu <span>Hburger</span></h1>} />
             <section>
                 <div className="category" id="burger">
                     <h2>Escolha seu H-Burger</h2>
@@ -46,7 +47,7 @@ export const Carte = () => {
             </section>
         </main>
         <footer>
-            <button type="button" id="saveBurger" disabled aria-label="Salvar Hamburguer">Escolha o seu lanche</button>
+            <Button className="none" value="Escolha seu Lanche" disabled={true} tag={"button"} id="saveBurger" />
             <h2>R$0,00</h2>
         </footer>
         </>

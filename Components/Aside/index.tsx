@@ -1,4 +1,3 @@
-//import styles from './aside.module.scss';
 
 export const Aside = () => {
   return (

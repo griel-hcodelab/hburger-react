@@ -1,15 +1,14 @@
 import { NextPage } from "next"
 import Button from "../Components/Button";
 import { Header } from "../Components/Header"
+import { Title } from "../Components/Title";
 
 const Orders: NextPage = () => {
     return (
         <>
             <Header />
             <main>
-                <header>
-                    <h1>Meus Pedidos</h1>
-                </header>
+                <Title text={<h1>Meus Pedidos</h1>} />
                 <div id="alert">
                 </div>
                 {/* <a href="/" className="btnBack" style={{ marginLeft: '20px', width: '270px' }}>QUER MAIS UM H-BURGER?</a> */}

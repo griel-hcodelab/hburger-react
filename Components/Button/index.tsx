@@ -2,12 +2,12 @@ import Link from "next/link";
 
 type ButtonTypes = {
     tag: 'button' | 'a';
-    href: string;
+    href?: string;
     value: string;
-    disabled?: Boolean;
+    disabled?: boolean;
     className?: string;
     onClick?: () => void;
-
+    id?: string;
 }
 
 
@@ -15,9 +15,11 @@ const Button = (props: ButtonTypes) => {
     return (
         <>
             {props.href === undefined ?
-                <button {...props.disabled ? 'disabled' : ''} className={props.className ? props.className : 'btnBack'}>{props.value}</button>
+                <button disabled={props.disabled ? true : false} id={props.id} className={props.className ? props.className : 'btnBack'}>{props.value}</button>
                 :
-                <Link href={props.href}>{props.value}</Link>
+                <Link href={props.href}>
+                    <a id={props.id} className={props.className ? props.className : 'btnBack'} >{props.value}</a>
+                </Link>
             }
         </>
     )
