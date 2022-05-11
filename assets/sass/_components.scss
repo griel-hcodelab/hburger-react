@@ -26,20 +26,20 @@
   }
 }
 
-@mixin horizontalTitle {
-  background-color: var(--white10);
-  height: 100px;
-  justify-content: center;
-  align-items: center;
-  h1 {
-    font-weight: 100;
-    font-size: 32px;
-    margin: 0;
-    span {
-      color: var(--primary);
-    }
-  }
-}
+// @mixin horizontalTitle {
+//   background-color: var(--white10);
+//   height: 100px;
+//   justify-content: center;
+//   align-items: center;
+//   h1 {
+//     font-weight: 100;
+//     font-size: 32px;
+//     margin: 0;
+//     span {
+//       color: var(--primary);
+//     }
+//   }
+// }
 
 @mixin category-list {
   h2 {
