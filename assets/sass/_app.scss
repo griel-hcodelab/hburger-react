@@ -97,7 +97,8 @@
                 @include components.category-list;
                 margin: var(--space);
                 ul {
-                    margin-top: var(--space);
+                    // margin-top: var(--space);
+                    margin-top: 0;
                     color: rgba(colors.$secondary, .7);
                     label {
                         flex-direction: row;

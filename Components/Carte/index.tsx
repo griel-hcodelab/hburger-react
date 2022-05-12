@@ -5,14 +5,20 @@ import { formatPrice } from "../../utils/formatPrice";
 import Button from "../Button"
 import { Loading } from "../Loading";
 import { Title } from "../Title"
+import { Aditionals } from "./Aditionals";
+import styled from 'styled-components';
 
+const H3 = styled.h3`
+	margin: 0;
+    margin-top: 40px;
+`;
 
 export const Carte = () => {
 
 	const [burgers, setBurgers] = useState<Burgers[]>([]);
 	const [ingredientType, setIngredientTypes] = useState<IngredientType[]>([]);
 	const [ingredientByType, setIngredientByTypes] = useState<IngredientByType[]>([]);
-	const [selectedBurger, setSelectedBurger] = useState<number>();
+	const [selectedBurger, setSelectedBurger] = useState<number | undefined>();
 
 	const getBurgers = async () => {
 		const results = await axios.get('/products', {
@@ -30,18 +36,22 @@ export const Carte = () => {
 		return results;
 	}
 
-	const getIngredientByTypes = async (id: number) => {
-		const results = await axios.get(`ingredients/by-type/${id}`, {
-			baseURL: process.env.API_URL
-		})
 
-		return results;
-	}
 
 	const setBurger = (id: number) => {
 
 		setSelectedBurger(id)
 
+	}
+
+	const clearBurger = ()=>{
+		setSelectedBurger(undefined)
+
+		document.querySelectorAll("input[type='radio']").forEach((item:any)=>{
+
+			item.checked = false;
+				
+			})
 	}
 
 	useEffect(() => {
@@ -58,32 +68,6 @@ export const Carte = () => {
 
 	}, []);
 
-	useEffect(() => {
-
-		const ingredients: any = [];
-
-		ingredientType.forEach(async (item) => {
-
-
-
-			const result = await getIngredientByTypes(item.id)
-				.then(({ data }) => {
-					// console.log(data)
-
-					return data;
-
-				})
-
-			ingredients.push(result);
-
-			setIngredientByTypes(ingredients);
-
-		});
-
-
-
-	}, [ingredientType]);
-
 
 
 	return (
@@ -98,9 +82,9 @@ export const Carte = () => {
 						{burgers.length === 0 ? <Loading /> : ''}
 
 
-						{burgers && burgers.map(({ id, name, price, description }) => (
-							<ul className="burger" key={id}>
-								<li>
+						<ul className="burger">
+							{burgers && burgers.map(({ id, name, price, description }) => (
+								<li key={id}>
 									<label data-id="2" className='inputRadio' data-burgername={name} data-name={name} data-price={price}>
 										<input type="radio" name="burger" id={`burger-${id}`} onChange={() => { setBurger(id) }} />
 										<span className="spanRadio"></span>
@@ -108,8 +92,8 @@ export const Carte = () => {
 										<div>{formatPrice(price)}</div>
 									</label>
 								</li>
-							</ul>
-						))}
+							))}
+						</ul>
 
 
 					</div>
@@ -118,14 +102,19 @@ export const Carte = () => {
 							<h2>Quer turbinar seu lanche? <small>(Você pode escolher a vontade, ou simplesmente avançar)</small></h2>
 
 							{ingredientType &&
-								ingredientType.map(({ id, name, description }) => (
-									<h3>{name} <p>{description}</p></h3>
+								ingredientType.map(({ id, name, description }, index) => (
+									<>
+										<H3 key={index}>{name} <p>{description}</p></H3>
+
+										<Aditionals id={id} />
+
+									</>
 
 
 								))
 							}
 
-							<a href="#bread" className="btnBack" style={{ marginBottom: '50px' }}><span>Voltar para o lanche</span></a>
+							<a href="#bread" className="btnBack" style={{ marginBottom: '50px' }} onClick={clearBurger}><span>Voltar para o lanche</span></a>
 						</>
 					</div>}
 

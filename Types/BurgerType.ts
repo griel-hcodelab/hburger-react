@@ -17,6 +17,8 @@ export type IngredientType = {
 }
 
 export type IngredientByType = {
-    ingredient: IngredientType;
-    price: string;
+    id: number;
+    price: number;
+    name: string;
+    description: string;
 }
