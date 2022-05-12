@@ -3,7 +3,7 @@
 
 #auth {
     background-color: colors.$bgLogin;
-    background-image: url("../images/bg.svg");
+    background-image: url("../../public/images/bg.svg");
     header {
         @include components.header;   
     }
