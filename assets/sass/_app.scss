@@ -83,6 +83,12 @@
                 padding-right: 40px;
                 border-radius: 5px;
                 min-height: 34px;
+                /* Roberto */
+                min-height: 34px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                max-width: 50%;
             }
             @media (max-width: 768px) {
                 height: 200px;
@@ -453,7 +459,11 @@
             }
         }
         &.open {
-            height: calc(100vh - 350px);
+            height: calc(100vh);
+            justify-content: space-between;
+            display: flex;
+            flex-direction: column;
+            z-index: 10;
             header, section {
                 padding: var(--space);
                 height: initial;
