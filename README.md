@@ -11,6 +11,11 @@ Atualize os pacotes Node:
 
     npm install
 
+<h2>Repositórios:</h2>
+
+- Todos devem criar seu próprio repositório para enviar suas alterações
+- Quando um recurso estiver concluído, testado e funcionando, enviar para a branch *draft*
+
 <h2>Páginas</h2>
 
 - Página de Login (Cadastro, login e recuperação de senha)
