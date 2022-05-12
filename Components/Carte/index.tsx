@@ -1,20 +1,30 @@
-import styles from './carte.module.scss';
+import { useState } from "react";
+import { Burgers } from "../../Types/BurgerType";
+import Button from "../Button"
+import { Title } from "../Title"
+
+
 
 export const Carte = () => {
+
+    const [burgers] = useState<Burgers[]>([]);
+
+
+
     return (
-        <main className={styles.carte} id="carte">
-            <header>
-                <h1>Monte o seu <span>Hburger</span></h1>
-            </header>
+        <>
+        
+        <main>
+            <Title text={<h1>Monte o seu <span>Hburger</span></h1>} />
             <section>
-                <div className={styles.category} id="burger">
+                <div className="category" id="burger">
                     <h2>Escolha seu H-Burger</h2>
                     <p>Primeiro, escolha seu lanche. Você pode adicionar mais ingredientes depois.</p>
-                    <ul className={styles.burger} style={{ marginBottom: '50px' }}>
+                    <ul className="burger" style={{ marginBottom: '50px' }}>
                         <li>
-                            <label data-id="2" className={styles.inputRadio} data-burgername="H-Burger Pro" data-name="H-Burger Pro" data-price="25.5">
+                            <label data-id="2" className="inputRadio" data-burgername="H-Burger Pro" data-name="H-Burger Pro" data-price="25.5">
                                 <input type="radio" name="burger" id="burger-2" />
-                                <span className={styles.spanRadio}></span>
+                                <span className="spanRadio"></span>
                                 <h3>H-Burger Pro <span>(Pão, Hamburger, Ovo, Mussarela, Presunto, Alface, Milho, Batata Palha, Bacon e Catupiry)</span></h3>
                                 <div>R$&nbsp;25,50</div>
                             </label>
@@ -22,7 +32,7 @@ export const Carte = () => {
                         <li>
                             <label data-id="3" data-burgername="H-Burger Pro" data-name="H-Burger Pro" data-price="25.5">
                                 <input type="radio" name="burger" id="burger-3" />
-                                <span className={styles.spanRadio}></span>
+                                <span className="spanRadio"></span>
                                 <h3>H-Burger Pro <span>(Pão, Hamburger, Ovo, Mussarela, Presunto, Alface, Milho, Batata Palha, Bacon e Catupiry)</span></h3>
                                 <div>R$&nbsp;25,50</div>
                             </label>
@@ -45,5 +55,10 @@ export const Carte = () => {
                 </div>
             </section>
         </main>
+        <footer>
+            <Button className="none" value="Escolha seu Lanche" disabled={true} tag={"button"} id="saveBurger" />
+            <h2>R$0,00</h2>
+        </footer>
+        </>
     )
 }

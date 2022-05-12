@@ -4,16 +4,13 @@ import { Aside } from '../Components/Aside'
 import { Carte } from '../Components/Carte'
 import { Header } from '../Components/Header'
 
-const Home: NextPage = () => {
+const ComponentPage: NextPage = () => {
   return (
     <Fragment>
       <div id="app">
         <section>
           <Header />
-
           <Carte />
-      
-
         </section>
         <Aside />
       </div>
@@ -23,4 +20,4 @@ const Home: NextPage = () => {
   )
 }
 
-export default Home
+export default ComponentPage
