@@ -15,9 +15,10 @@ body {
     background-color: var(--dark);
     color: var(--white);
     overflow: hidden;
+    min-width: 320px;
 }
 
-body, div, section, main, article, header, footer, form, label {
+body, div, section, main, article, header, footer, form, label, span {
     display: flex;
     flex-direction: column;
 }
