@@ -1,6 +1,6 @@
-import { FormRegisterData } from './RegisterFormData';
+import { RegisterFormData } from './RegisterFormData';
 
 export type AuthContextType = {
-  onRegisterFormSubmit: (data: FormRegisterData) => void;
+  onRegisterFormSubmit: (data: RegisterFormData) => void;
   token: string | null;
 };
