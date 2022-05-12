@@ -3,10 +3,12 @@ import { Fragment } from 'react'
 import { Aside } from '../Components/Aside'
 import { Carte } from '../Components/Carte'
 import { Header } from '../Components/Header'
+import TrayProvider from '../contexts/TrayContext'
 
 const ComponentPage: NextPage = () => {
   return (
     <Fragment>
+      <TrayProvider>
       <div id="app">
         <section>
           <Header />
@@ -14,8 +16,7 @@ const ComponentPage: NextPage = () => {
         </section>
         <Aside />
       </div>
-
-
+      </TrayProvider>
     </Fragment>
   )
 }

@@ -1,8 +1,12 @@
+import { useTray } from "../../contexts/TrayContext"
 
 export const Aside = () => {
+
+    const { setOpen } = useTray();
+
   return (
-    <aside >
-        <header>
+    <aside id="aside">
+        <header onClick={() => setOpen(true)}>
             <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M50.6667 8H13.3067C10.3467 8 8.02667 10.3733 8.02667 13.3333L8 50.6667C8 53.6 10.3467 56 13.3067 56H50.6667C53.6 56 56 53.6 56 50.6667V13.3333C56 10.3733 53.6 8 50.6667 8ZM50.6667 40H40C40 44.4267 36.4 48 32 48C27.6 48 24 44.4267 24 40H13.3067V13.3333H50.6667V40Z" fill="#070D0D"/>
             </svg>                
@@ -18,7 +22,7 @@ export const Aside = () => {
         </section>
         <footer>
 
-            <div className="close">
+            <div className="close" onClick={() => setOpen(false)}>
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M16.59 8.59L12 13.17L7.41 8.59L6 10L12 16L18 10L16.59 8.59Z" fill="black"/>
                 </svg>                    
