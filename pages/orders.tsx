@@ -1,11 +1,13 @@
 import { NextPage } from "next"
 import Button from "../Components/Button";
 import { Header } from "../Components/Header"
+import { MetaTitle } from "../Components/Header/MetaTitle";
 import { Title } from "../Components/Title";
 
 const Orders: NextPage = () => {
     return (
         <>
+        <MetaTitle title="Seus Pedidos :: HBurger" />
             <Header />
             <main>
                 <Title text={<h1>Meus Pedidos</h1>} />
