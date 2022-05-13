@@ -66,7 +66,6 @@ const CarteComponent = () => {
 
 		})
 
-		console.log(selectedBurger)
 	}
 
 	useEffect(() => {
@@ -101,7 +100,7 @@ const CarteComponent = () => {
 							{burgers && burgers.map(({ id, name, price, description }) => (
 								<li key={id}>
 									<label data-id="2" className='inputRadio' data-burgername={name} data-name={name} data-price={price}>
-										<input type="radio" name="burger" id={`burger-${id}`} onChange={() => { setBurgerToTray({ id, name, price }) }} />
+										<input type="radio" name="burger" id={`burger-${id}`} onChange={(e) => { setBurgerToTray({ id, name, price }) }} />
 										<span className="spanRadio"></span>
 										<h3>{name} <span>({description})</span></h3>
 										<div>{formatPrice(price)}</div>

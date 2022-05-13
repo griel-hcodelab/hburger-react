@@ -57,14 +57,16 @@ export default function TrayItemsProvider({ children }: { children: ReactNode })
     }
 
     const removeAditionals = (id: number) => {
-        aditionals.filter(({ id }) => id !== id);
-    }
 
-    const organizeTray = () => {
-        const newTray = [...burger, ...aditionals];
-        return newTray;
-    }
+        const aditional = aditionals.find((item)=> item.id === id);
 
+        if (aditional) {
+            const filtered = aditionals.filter((item) => item.id !== id);
+            setAditionals(filtered)
+        }
+
+
+    }
 
     return (
         <TrayItemsContext.Provider value={

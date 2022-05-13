@@ -7,7 +7,7 @@ import { formatPrice } from "../../../utils/formatPrice";
 
 export const Aditionals = ({ id }: { id: number }) => {
 
-    const { aditionals, setAditionals } = useTrayItems()
+    const { aditionals, setAditionals, removeAditionals } = useTrayItems()
 
     const [ingredientByType, setIngredientByTypes] = useState<IngredientByType[]>([]);
 
@@ -19,11 +19,17 @@ export const Aditionals = ({ id }: { id: number }) => {
         return results;
     }
 
-    const setAditionalsToTray = ({id, name, price}:{id: number; name: string; price: number;}) => {
+    const setAditionalsToTray = (e:any, {id, name, price}:{id: number; name: string; price: number;}) => {
 
-        const newAditionals = [{id, name, price}, ...aditionals]
 
-		setAditionals(newAditionals);
+        if(e.target.checked){
+            const newAditionals = [{id, name, price}, ...aditionals]
+    
+            setAditionals(newAditionals);
+        } else {
+            removeAditionals(id)
+        }
+
         
 	}
 
@@ -44,7 +50,7 @@ export const Aditionals = ({ id }: { id: number }) => {
             {ingredientByType && ingredientByType.map(({id, name, description, price}, index)=> (
             <li key={`${id}-${name}`}>
                 <label data-id={id} data-name={name} data-price={price}>
-                    <input type="checkbox" name="item" id={`aditional-${id}`} onChange={()=>{setAditionalsToTray({id, name, price})}} />
+                    <input type="checkbox" name="item" id={`aditional-${id}`} onChange={(e)=>{setAditionalsToTray(e, {id, name, price})}} />
                     <span></span>
                     <h3>{name} <span>({description})</span></h3>
                     <div>{formatPrice(price)}</div>

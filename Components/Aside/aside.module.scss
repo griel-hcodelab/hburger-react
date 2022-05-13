@@ -11,22 +11,28 @@
     width: 100%;
     justify-content: flex-start;
     align-items: flex-start;
+
     ul {
         width: 100%;
-    align-items: flex-start;
-    margin: 0;
-    padding: 0;
-    li {
-        width: 100%;
-        align-items: flex-start!important;
+        align-items: flex-start;
         margin: 0;
-        padding: 5px 0;
-        height: fit-content!important;
-        color: #333;
-        padding-left: 10px;
-        border-bottom: none!important;
-        font-size: 0.8em!important;
-        flex-direction: row!important;
+        padding: 0;
+
+        li {
+            width: 100%;
+            align-items: flex-start !important;
+            margin: 0;
+            padding: 5px 0;
+            height: fit-content !important;
+            color: #333;
+            padding-left: 10px;
+            border-bottom: none !important;
+            font-size: 0.8em !important;
+            flex-direction: row !important;
+        }
     }
-    }
+}
+
+.hide {
+    display: none!important;
 }

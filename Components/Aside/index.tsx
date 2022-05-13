@@ -25,7 +25,7 @@ export const Aside = () => {
 
 
 
-        console.log(trayBurger[0].burger)
+        //console.log(trayBurger[0].burger)
 
 
     }, [trayBurger])
@@ -46,7 +46,8 @@ export const Aside = () => {
 
 
                     {trayBurger.map((item: any, index) => (
-                        <li key={index}>
+                        
+                        <li className={item.burger?.name ? '' : styles.hide} key={index}>
                             <>
                                 <div className={styles.burger}>
                                     <div>{item.burger?.name}</div>
