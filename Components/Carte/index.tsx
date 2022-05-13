@@ -19,8 +19,7 @@ const CarteComponent = () => {
 
 	const [burgers, setBurgers] = useState<Burgers[]>([]);
 	const [ingredientType, setIngredientTypes] = useState<IngredientType[]>([]);
-	const [ingredientByType, setIngredientByTypes] = useState<IngredientByType[]>([]);
-	const [selectedBurger, setSelectedBurger] = useState<number | undefined>();
+	const [selectedBurger, setSelectedBurger] = useState<number | null>();
 
 	const getBurgers = async () => {
 		const results = await axios.get('/products', {
@@ -38,25 +37,36 @@ const CarteComponent = () => {
 		return results;
 	}
 
-	const {setId, setName, setPrice} = useTrayItems()
+	const { setBurger, setAditionals } = useTrayItems();
 
-	const setBurger = ({id, name, price}:{id: number; name: string; price: number;}) => {
+
+	const setBurgerToTray = ({ id, name, price }: { id: number; name: string; price: number; }) => {
 
 		setSelectedBurger(id)
 
-		setId(id); setName(name); setPrice(price);
-		
+		setBurger({ id, name, price });
+
 
 	}
 
-	const clearBurger = ()=>{
-		setSelectedBurger(undefined)
+	const clearBurger = () => {
+		setSelectedBurger(null)
+		setAditionals(null)
+		setBurger(null)
 
-		document.querySelectorAll("input[type='radio']").forEach((item:any)=>{
+		document.querySelectorAll("input[type='radio']").forEach((item: any) => {
 
 			item.checked = false;
-				
-			})
+
+		})
+
+		document.querySelectorAll("input[type='checkbox']").forEach((item: any) => {
+
+			item.checked = false;
+
+		})
+
+		console.log(selectedBurger)
 	}
 
 	useEffect(() => {
@@ -91,7 +101,7 @@ const CarteComponent = () => {
 							{burgers && burgers.map(({ id, name, price, description }) => (
 								<li key={id}>
 									<label data-id="2" className='inputRadio' data-burgername={name} data-name={name} data-price={price}>
-										<input type="radio" name="burger" id={`burger-${id}`} onChange={() => { setBurger({id, name, price}) }} />
+										<input type="radio" name="burger" id={`burger-${id}`} onChange={() => { setBurgerToTray({ id, name, price }) }} />
 										<span className="spanRadio"></span>
 										<h3>{name} <span>({description})</span></h3>
 										<div>{formatPrice(price)}</div>
@@ -135,10 +145,10 @@ const CarteComponent = () => {
 }
 
 
-export default function Carte (){
+export default function Carte() {
 	return (
 
-			<CarteComponent />
+		<CarteComponent />
 
 	)
 }

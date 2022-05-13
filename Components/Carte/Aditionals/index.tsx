@@ -1,10 +1,13 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useTrayItems } from "../../../Context/TrayItemsContext";
 import { IngredientByType } from "../../../Types/BurgerType"
 import { formatPrice } from "../../../utils/formatPrice";
 
 
 export const Aditionals = ({ id }: { id: number }) => {
+
+    const { aditionals, setAditionals } = useTrayItems()
 
     const [ingredientByType, setIngredientByTypes] = useState<IngredientByType[]>([]);
 
@@ -15,6 +18,14 @@ export const Aditionals = ({ id }: { id: number }) => {
 
         return results;
     }
+
+    const setAditionalsToTray = ({id, name, price}:{id: number; name: string; price: number;}) => {
+
+        const newAditionals = [{id, name, price}, ...aditionals]
+
+		setAditionals(newAditionals);
+        
+	}
 
     useEffect(() => {
 
@@ -33,7 +44,7 @@ export const Aditionals = ({ id }: { id: number }) => {
             {ingredientByType && ingredientByType.map(({id, name, description, price}, index)=> (
             <li key={`${id}-${name}`}>
                 <label data-id={id} data-name={name} data-price={price}>
-                    <input type="checkbox" name="item" id={`aditional-${id}`} />
+                    <input type="checkbox" name="item" id={`aditional-${id}`} onChange={()=>{setAditionalsToTray({id, name, price})}} />
                     <span></span>
                     <h3>{name} <span>({description})</span></h3>
                     <div>{formatPrice(price)}</div>

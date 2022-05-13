@@ -1,30 +1,82 @@
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
-import { TrayItemsContextType, TrayItemsTypes } from "../../Types/Contexts/TrayItemsTypes";
+import { TrayItemsTypes } from "../../Types/Contexts/TrayItemsTypes";
 
-type data = {
-    data: TrayItemsTypes
+type TrayItemsTypesProps = {
+    // aditionals: TrayItemsTypes[],
+    // addItems: ()=>void;
+    // removeItems: ()=>void;
+    // addAditionals: ()=>void;
+    // removeAditionals: ()=>void;
+    // burger: TrayItemsTypes[];
+    // setBurger: (burger:TrayItemsTypes)=>void;
+    // setAditionals: (aditionals:TrayItemsTypes[])=>void;
+
+    burger: TrayItemsTypes[],
+    aditionals: TrayItemsTypes[],
+    removeAditionals: (aditionals: any) => void;
+    removeBurger: (burger: any) => void;
+    setBurger: (burger: any) => void;
+    setAditionals: (aditionals: any) => void;
 }
 
-const TrayItemsContext = createContext<TrayItemsTypes>({
+const TrayItemsContext = createContext<TrayItemsTypesProps>({
+    aditionals: [],
+    burger: [],
+    removeAditionals: () => { },
+    removeBurger: () => { },
+    setBurger: () => { },
+    setAditionals: () => { }
 
-    id: null,
-    name: null,
-    price: null,
-    setId: () => {},
-    setName: () => {},
-    setPrice: () => {},
 });
 
 
-export default function TrayItemsProvider({children}:{ children: ReactNode}){
+export default function TrayItemsProvider({ children }: { children: ReactNode }) {
 
-    const [id, setId] = useState();
-    const [name, setName] = useState();
-    const [price, setPrice] = useState();
+    const [burger, setBurger] = useState<TrayItemsTypes[]>([]);
+    const [aditionals, setAditionals] = useState<TrayItemsTypes[]>([]);
+
+    const addBurger = ({ id, name, price }: { id: number; name: string; price: number; }) => {
+
+        const newBurger = [...burger, { id, name, price }];
+
+        setBurger(newBurger);
+
+    }
+
+    const removeBurger = (id: number) => {
+        burger.filter(({ id }) => id !== id);
+
+    }
+
+    const addAditionals = ({ id, name, price }: { id: number; name: string; price: number; }) => {
+
+        const newAditionals = [...aditionals, { id, name, price }];
+
+        setAditionals(newAditionals);
+
+    }
+
+    const removeAditionals = (id: number) => {
+        aditionals.filter(({ id }) => id !== id);
+    }
+
+    const organizeTray = () => {
+        const newTray = [...burger, ...aditionals];
+        return newTray;
+    }
 
 
     return (
-        <TrayItemsContext.Provider value={{id, name, price, setId, setName, setPrice}}>
+        <TrayItemsContext.Provider value={
+            {
+                aditionals,
+                burger,
+                removeAditionals,
+                setBurger,
+                removeBurger,
+                setAditionals
+            }
+        }>
             {children}
         </TrayItemsContext.Provider>
     );
