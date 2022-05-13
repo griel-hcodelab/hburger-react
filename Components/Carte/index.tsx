@@ -51,8 +51,8 @@ const CarteComponent = () => {
 
 	const clearBurger = () => {
 		setSelectedBurger(null)
-		setAditionals(null)
-		setBurger(null)
+		setAditionals([])
+		setBurger([])
 
 		document.querySelectorAll("input[type='radio']").forEach((item: any) => {
 
