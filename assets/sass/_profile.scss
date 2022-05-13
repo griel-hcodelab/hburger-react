@@ -36,6 +36,9 @@ form {
             transition: border-color .3s ease-in-out;
             width: 100%;
             background-color: transparent;
+            option {
+                color: #202626;
+            }
             &:focus {
                 border-color: var(--gray);
                 + label {
