@@ -1,8 +1,20 @@
-import { useTray } from "../../contexts/TrayContext"
+import { useEffect, useState } from "react";
+import { useTray } from "../../Context/TrayContext"
+import { useTrayItems } from "../../Context/TrayItemsContext";
+import { TrayItemsTypes } from "../../Types/Contexts/TrayItemsTypes";
+import { formatPrice } from "../../utils/formatPrice";
+
+type a = {
+    id?: number | undefined;
+    name?: string | undefined;
+    price?: number | undefined;
+}
 
 export const Aside = () => {
 
     const { setOpen } = useTray();
+
+    const { id, name, price } = useTrayItems()
 
   return (
     <aside id="aside">
@@ -17,7 +29,15 @@ export const Aside = () => {
                 
             </div>
             <ul>
-                
+            <li data-id={id}>
+                <div>{name}</div>
+                <div>{formatPrice(price)}</div>
+                <button type="button" id="43345" aria-label="Remover Hamburguer">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6 19C6 20.1 6.9 21 8 21H16C17.1 21 18 20.1 18 19V7H6V19ZM19 4H15.5L14.5 3H9.5L8.5 4H5V6H19V4Z" fill="black"></path>
+                    </svg>
+                </button>
+                </li>
             </ul>
         </section>
         <footer>

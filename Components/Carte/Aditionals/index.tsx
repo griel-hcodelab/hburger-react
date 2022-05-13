@@ -2,7 +2,6 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { IngredientByType } from "../../../Types/BurgerType"
 import { formatPrice } from "../../../utils/formatPrice";
-import styled from 'styled-components';
 
 
 export const Aditionals = ({ id }: { id: number }) => {
@@ -21,10 +20,8 @@ export const Aditionals = ({ id }: { id: number }) => {
 
         getIngredientByTypes(id)
             .then(({ data }) => {
-                console.log(data)
 
                 setIngredientByTypes(data);
-
 
             })
 
@@ -32,9 +29,9 @@ export const Aditionals = ({ id }: { id: number }) => {
 
     return (
         <>
-        <ul key={id} className="aditionals">
+        <ul className="aditionals">
             {ingredientByType && ingredientByType.map(({id, name, description, price}, index)=> (
-            <li key={id}>
+            <li key={`${id}-${name}`}>
                 <label data-id={id} data-name={name} data-price={price}>
                     <input type="checkbox" name="item" id={`aditional-${id}`} />
                     <span></span>

@@ -7,13 +7,15 @@ import { Loading } from "../Loading";
 import { Title } from "../Title"
 import { Aditionals } from "./Aditionals";
 import styled from 'styled-components';
+import { useTrayItems } from "../../Context/TrayItemsContext";
+
 
 const H3 = styled.h3`
 	margin: 0;
     margin-top: 40px;
 `;
 
-export const Carte = () => {
+const CarteComponent = () => {
 
 	const [burgers, setBurgers] = useState<Burgers[]>([]);
 	const [ingredientType, setIngredientTypes] = useState<IngredientType[]>([]);
@@ -36,11 +38,14 @@ export const Carte = () => {
 		return results;
 	}
 
+	const {setId, setName, setPrice} = useTrayItems()
 
-
-	const setBurger = (id: number) => {
+	const setBurger = ({id, name, price}:{id: number; name: string; price: number;}) => {
 
 		setSelectedBurger(id)
+
+		setId(id); setName(name); setPrice(price);
+		
 
 	}
 
@@ -86,7 +91,7 @@ export const Carte = () => {
 							{burgers && burgers.map(({ id, name, price, description }) => (
 								<li key={id}>
 									<label data-id="2" className='inputRadio' data-burgername={name} data-name={name} data-price={price}>
-										<input type="radio" name="burger" id={`burger-${id}`} onChange={() => { setBurger(id) }} />
+										<input type="radio" name="burger" id={`burger-${id}`} onChange={() => { setBurger({id, name, price}) }} />
 										<span className="spanRadio"></span>
 										<h3>{name} <span>({description})</span></h3>
 										<div>{formatPrice(price)}</div>
@@ -106,7 +111,7 @@ export const Carte = () => {
 									<>
 										<H3 key={index}>{name} <p>{description}</p></H3>
 
-										<Aditionals id={id} />
+										<Aditionals key={`aditional-${name}-${index}`} id={id} />
 
 									</>
 
@@ -122,9 +127,18 @@ export const Carte = () => {
 				</section>
 			</main>
 			<footer>
-				<Button className="none" value="Escolha seu Lanche" disabled={true} tag={"button"} id="saveBurger" />
+				<Button className="none" value="Colocar na bandeja" disabled={true} tag={"button"} id="saveBurger" />
 				<h2>R$0,00</h2>
 			</footer>
 		</>
+	)
+}
+
+
+export default function Carte (){
+	return (
+
+			<CarteComponent />
+
 	)
 }
