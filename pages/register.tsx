@@ -8,17 +8,15 @@ import { RegisterFormData } from '../Types/Auth/RegisterFormData';
 const PageComponent: NextPage = () => {
   const { register, handleSubmit } = useForm<RegisterFormData>();
 
-  const { onRegisterFormSubmit } = useAuth();
+  const { onRegisterFormSubmit, registerFormIsLoading } = useAuth();
 
   return (
     <AuthLayout>
-      <form id="form-register" onSubmit={handleSubmit<RegisterFormData>(onRegisterFormSubmit)}>
-        <input
-          type="text"
-          placeholder="Nome"
-          required
-          {...register('name')}
-        />
+      <form
+        id="form-register"
+        onSubmit={handleSubmit<RegisterFormData>(onRegisterFormSubmit)}
+      >
+        <input type="text" placeholder="Nome" required {...register('name')} />
         <input
           type="email"
           placeholder="E-mail"
@@ -30,7 +28,6 @@ const PageComponent: NextPage = () => {
           placeholder="Telefone"
           required
           {...register('phone')}
-
         />
         <input
           type="password"
@@ -40,7 +37,9 @@ const PageComponent: NextPage = () => {
         />
 
         <footer>
-          <button type="submit">Enviar</button>
+          <button type="submit" disabled={registerFormIsLoading}>
+            {registerFormIsLoading ? 'Enviando' : 'Enviar'}
+          </button>
         </footer>
       </form>
     </AuthLayout>

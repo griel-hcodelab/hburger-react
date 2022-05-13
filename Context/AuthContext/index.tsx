@@ -17,12 +17,16 @@ const AuthContext = createContext<AuthContextType>({
   onRegisterFormSubmit: () => {},
   onLoginFormSubmit: () => {},
   token: null,
+  loginFormIsLoading: false,
+  registerFormIsLoading: false,
 });
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
   const router = useRouter();
   const [token, setToken] = useState<string | null>(null);
   const [nextURL] = useState('/');
+  const [loginFormIsLoading, setloginFormIsLoading] = useState(false);
+  const [registerFormIsLoading, setRegisterFormIsLoading] = useState(false);
 
   const redirectToNextURL = useCallback(
     () => router.push(nextURL),
@@ -31,6 +35,8 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const onRegisterFormSubmit = async (formData: RegisterFormData) => {
     try {
+      setRegisterFormIsLoading(true);
+
       const { data } = await axios.post('/api/register', {
         name: formData.name,
         email: formData.email,
@@ -42,17 +48,23 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       redirectToNextURL();
     } catch (error: any) {
       alert(error.response.data.message);
+    } finally {
+      setRegisterFormIsLoading(false);
     }
   };
 
   const onLoginFormSubmit = async (formData: LoginFormData) => {
     try {
+      setloginFormIsLoading(true);
+
       const { data } = await axios.post(`/api/login`, formData);
 
       setToken(data.token);
       redirectToNextURL();
     } catch (error: any) {
       alert(error.response.data.message);
+    } finally {
+      setloginFormIsLoading(false);
     }
   };
 
@@ -68,7 +80,13 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
   return (
     <AuthContext.Provider
-      value={{ onRegisterFormSubmit, onLoginFormSubmit, token }}
+      value={{
+        onRegisterFormSubmit,
+        onLoginFormSubmit,
+        token,
+        loginFormIsLoading,
+        registerFormIsLoading,
+      }}
     >
       {children}
     </AuthContext.Provider>
