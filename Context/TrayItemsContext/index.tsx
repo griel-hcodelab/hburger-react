@@ -5,35 +5,52 @@ type TrayItemsTypesProps = {
 
     burger: TrayItemsTypes[],
     aditionals: TrayItemsTypes[],
+    subtotal: number;
     removeAditionals: (aditionals: any) => void;
     removeBurger: (burger: any) => void;
     setBurger: (burger: any) => void;
     addAditionals: (aditionals: any) => void;
+    setSubTotal: (subtotal: number) => void;
+    addBurger: (burger: any) => void;
 }
 
 const TrayItemsContext = createContext<TrayItemsTypesProps>({
     aditionals: [],
     burger: [],
+    subtotal: 0,
     removeAditionals: () => { },
     removeBurger: () => { },
     setBurger: () => { },
-    addAditionals: () => { }
-
+    addAditionals: () => { },
+    setSubTotal: () => { },
+    addBurger: () => { }
 });
-
 
 export default function TrayItemsProvider({ children }: { children: ReactNode }) {
 
     const [burger, setBurger] = useState<TrayItemsTypes[]>([]);
     const [aditionals, setAditionals] = useState<TrayItemsTypes[]>([]);
+    const [subtotal, setSubTotal] = useState<number>(0);
+    const [values, setValues] = useState<number[]>([]);
 
     const addBurger = ({ id, name, price }: { id: number; name: string; price: number; }) => {
 
-        // const newBurger = [...burger, { id, name, price }];
-
-        // setBurger(newBurger);
+        const newArray = [...values, Number(price)];
+              
+        setValues(newArray);
 
     }
+
+    useEffect(()=>{
+
+        
+        const sum = values.reduce((a, b) => a + b, 0);
+        
+        setSubTotal(sum);
+
+        console.log('effect',subtotal)
+
+    },[values])
 
     const removeBurger = (id: number) => {
         // burger.filter(({ id }) => id !== id);
@@ -42,7 +59,11 @@ export default function TrayItemsProvider({ children }: { children: ReactNode })
 
     const addAditionals = ({ id, name, price }: { id: number; name: string; price: number; }) => {
 
+        console.log(burger)
+
         const newAditionals = [...aditionals, { id, name, price }];
+
+        setValues([Number(price), ...values]);
 
         setAditionals(newAditionals);
 
@@ -65,10 +86,13 @@ export default function TrayItemsProvider({ children }: { children: ReactNode })
             {
                 aditionals,
                 burger,
+                subtotal,
                 removeAditionals,
                 setBurger,
                 removeBurger,
-                addAditionals
+                addAditionals,
+                setSubTotal,
+                addBurger
             }
         }>
             {children}

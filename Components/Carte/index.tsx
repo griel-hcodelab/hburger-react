@@ -51,7 +51,7 @@ const CarteComponent = () => {
 		return results;
 	}
 
-	const { setBurger, addAditionals } = useTrayItems();
+	const { setBurger, subtotal, setSubTotal, addBurger } = useTrayItems();
 
 	const sendBurgerToTray = ()=>{
 
@@ -66,7 +66,9 @@ const CarteComponent = () => {
 
 		setHaveSelectedBurger(id)
 
-		setSelectedBurger({ id, name, price });
+		addBurger({ id, name, price });
+
+		setSubTotal(Number(price));
 
 
 	}
@@ -150,7 +152,7 @@ const CarteComponent = () => {
 								))
 							}
 
-							<a href="#bread" className="btnBack" style={{ marginBottom: '50px' }} onClick={clearBurger}><span>Voltar para o lanche</span></a>
+							<button className="btnBack" style={{ marginBottom: '50px' }} onClick={clearBurger}><span>Voltar para o lanche</span></button>
 						</>
 					</div>}
 
@@ -159,7 +161,7 @@ const CarteComponent = () => {
 			</main>
 			<footer>
 				<Button className="none" value="Colocar na bandeja" onClick={sendBurgerToTray} disabled={hasSelectedBurger ? false : true} tag={"button"} id="saveBurger" />
-				<h2>R$0,00</h2>
+				<h2>{formatPrice(Number(subtotal))}</h2>
 			</footer>
 		</>
 	)
