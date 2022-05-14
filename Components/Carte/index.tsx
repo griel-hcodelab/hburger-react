@@ -51,14 +51,14 @@ const CarteComponent = () => {
 		return results;
 	}
 
-	const { setBurger, setAditionals } = useTrayItems();
+	const { setBurger, addAditionals } = useTrayItems();
 
 	const sendBurgerToTray = ()=>{
 
 		setBurger(selectedBurger)
 
-		setHaveSelectedBurger(null)
-		setAditionals([])
+		// setHaveSelectedBurger(null)
+		// addAditionals([])
 		
 	}
 
@@ -72,9 +72,9 @@ const CarteComponent = () => {
 	}
 
 	const clearBurger = () => {
-		setHaveSelectedBurger(null)
-		setAditionals([])
-		setBurger([])
+		// setHaveSelectedBurger(null)
+		// addAditionals([])
+		// setBurger([])
 
 		document.querySelectorAll("input[type='radio']").forEach((item: any) => {
 
@@ -82,11 +82,11 @@ const CarteComponent = () => {
 
 		})
 
-		document.querySelectorAll("input[type='checkbox']").forEach((item: any) => {
+		// document.querySelectorAll("input[type='checkbox']").forEach((item: any) => {
 
-			item.checked = false;
+		// 	item.checked = false;
 
-		})
+		// })
 
 	}
 
@@ -142,7 +142,7 @@ const CarteComponent = () => {
 									<>
 										<H3 key={index}>{name} <p>{description}</p></H3>
 
-										<Aditionals key={Math.floor(Math.random() * 100)} id={id} />
+										<Aditionals id={id} />
 
 									</>
 

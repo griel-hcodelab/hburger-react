@@ -8,7 +8,7 @@ type TrayItemsTypesProps = {
     removeAditionals: (aditionals: any) => void;
     removeBurger: (burger: any) => void;
     setBurger: (burger: any) => void;
-    setAditionals: (aditionals: any) => void;
+    addAditionals: (aditionals: any) => void;
 }
 
 const TrayItemsContext = createContext<TrayItemsTypesProps>({
@@ -17,7 +17,7 @@ const TrayItemsContext = createContext<TrayItemsTypesProps>({
     removeAditionals: () => { },
     removeBurger: () => { },
     setBurger: () => { },
-    setAditionals: () => { }
+    addAditionals: () => { }
 
 });
 
@@ -29,14 +29,14 @@ export default function TrayItemsProvider({ children }: { children: ReactNode })
 
     const addBurger = ({ id, name, price }: { id: number; name: string; price: number; }) => {
 
-        const newBurger = [...burger, { id, name, price }];
+        // const newBurger = [...burger, { id, name, price }];
 
-        setBurger(newBurger);
+        // setBurger(newBurger);
 
     }
 
     const removeBurger = (id: number) => {
-        burger.filter(({ id }) => id !== id);
+        // burger.filter(({ id }) => id !== id);
 
     }
 
@@ -68,7 +68,7 @@ export default function TrayItemsProvider({ children }: { children: ReactNode })
                 removeAditionals,
                 setBurger,
                 removeBurger,
-                setAditionals
+                addAditionals
             }
         }>
             {children}

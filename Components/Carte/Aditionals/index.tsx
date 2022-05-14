@@ -12,7 +12,7 @@ type AditionalsPropsType = {
 
 export const Aditionals = ({ id, keys }: AditionalsPropsType) => {
 
-    const { aditionals, setAditionals, removeAditionals } = useTrayItems()
+    const { aditionals, addAditionals, removeAditionals } = useTrayItems()
 
     const [ingredientByType, setIngredientByTypes] = useState<IngredientByType[]>([]);
 
@@ -26,12 +26,10 @@ export const Aditionals = ({ id, keys }: AditionalsPropsType) => {
 
     const saveAditionals = (e: any, { id, name, price }: { id: number; name: string; price: number; }) => {
 
-        console.log(e.target.checked)
-
         if (e.target.checked) {
-            const newAditionals = [{ id, name, price }, ...aditionals]
 
-            setAditionals(newAditionals);
+            addAditionals({ id, name, price });
+
         } else {
             removeAditionals(id)
         }
@@ -55,7 +53,7 @@ export const Aditionals = ({ id, keys }: AditionalsPropsType) => {
             <ul className="aditionals">
                 {ingredientByType && ingredientByType.map(({ id, name, description, price }, index) => (
                     <li key={index}>
-                        <label data-id={id} data-name={name} data-price={price}>
+                        <label data-id={id} data-name={name} data-price={price} >
                             <input type="checkbox" name="item" id={`aditional-${id}`} onChange={(e) => { saveAditionals(e, { id, name, price }) }} />
                             <span></span>
                             <h3>{name} <span>({description})</span></h3>
