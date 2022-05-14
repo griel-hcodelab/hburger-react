@@ -15,7 +15,7 @@ const Button = (props: ButtonTypes) => {
     return (
         <>
             {props.href === undefined ?
-                <button disabled={props.disabled ? true : false} id={props.id} className={props.className ? props.className : 'btnBack'}>{props.value}</button>
+                <button onClick={props.onClick} disabled={props.disabled ? true : false} id={props.id} className={props.className ? props.className : 'btnBack'}>{props.value}</button>
                 :
                 <Link href={props.href}>
                     <a id={props.id} className={props.className ? props.className : 'btnBack'} >{props.value}</a>
