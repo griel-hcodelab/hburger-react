@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Burgers, IngredientByType, IngredientType, Selectedburger } from "../../Types/BurgerType";
 import { formatPrice } from "../../utils/formatPrice";
 import Button from "../Button"
@@ -119,8 +119,8 @@ const CarteComponent = () => {
 
 
 						<ul className="burger">
-							{burgers && burgers.map(({ id, name, price, description }) => (
-								<li key={id}>
+							{burgers && burgers.map(({ id, name, price, description }, index) => (
+								<li key={index}>
 									<label data-id="2" className='inputRadio' data-burgername={name} data-name={name} data-price={price}>
 										<input type="radio" name="burger" id={`burger-${id}`} onChange={(e) => { saveBurger({ id, name, price }) }} />
 										<span className="spanRadio"></span>
@@ -142,7 +142,7 @@ const CarteComponent = () => {
 									<>
 										<H3 key={index}>{name} <p>{description}</p></H3>
 
-										<Aditionals key={`aditional-${name}-${index}`} id={id} />
+										<Aditionals key={Math.floor(Math.random() * 100)} id={id} />
 
 									</>
 
@@ -169,7 +169,7 @@ const CarteComponent = () => {
 export default function Carte() {
 	return (
 
-		<CarteComponent />
+		<CarteComponent key={Math.floor(Math.random() * 100)} />
 
 	)
 }

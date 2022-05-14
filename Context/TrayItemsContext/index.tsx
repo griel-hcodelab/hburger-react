@@ -2,14 +2,6 @@ import { createContext, ReactNode, useContext, useEffect, useState } from "react
 import { TrayItemsTypes } from "../../Types/Contexts/TrayItemsTypes";
 
 type TrayItemsTypesProps = {
-    // aditionals: TrayItemsTypes[],
-    // addItems: ()=>void;
-    // removeItems: ()=>void;
-    // addAditionals: ()=>void;
-    // removeAditionals: ()=>void;
-    // burger: TrayItemsTypes[];
-    // setBurger: (burger:TrayItemsTypes)=>void;
-    // setAditionals: (aditionals:TrayItemsTypes[])=>void;
 
     burger: TrayItemsTypes[],
     aditionals: TrayItemsTypes[],
