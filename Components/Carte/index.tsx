@@ -139,6 +139,8 @@ const CarteComponent = () => {
 						<>
 							<h2>Quer turbinar seu lanche? <small>(Você pode escolher a vontade, ou simplesmente avançar)</small></h2>
 
+							{ingredientType.length === 0 ? <Loading /> : ''}
+
 							{ingredientType &&
 								ingredientType.map(({ id, name, description }, index) => (
 									<>

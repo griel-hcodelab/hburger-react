@@ -31,7 +31,7 @@ export const Aditionals = ({ id, keys }: AditionalsPropsType) => {
             addAditionals({ id, name, price });
 
         } else {
-            removeAditionals(id)
+            removeAditionals({id})
         }
 
 

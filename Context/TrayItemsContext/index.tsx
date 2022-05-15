@@ -31,26 +31,27 @@ export default function TrayItemsProvider({ children }: { children: ReactNode })
     const [burger, setBurger] = useState<TrayItemsTypes[]>([]);
     const [aditionals, setAditionals] = useState<TrayItemsTypes[]>([]);
     const [subtotal, setSubTotal] = useState<number>(0);
-    const [values, setValues] = useState<number[]>([]);
+
+    const [burgerValues, setBurgerValues] = useState<number[]>([])
+    const [aditionalsValues, setAditionalsValues] = useState<number[]>([])
 
     const addBurger = ({ id, name, price }: { id: number; name: string; price: number; }) => {
 
-        const newArray = [...values, Number(price)];
+        const newArray = [...burgerValues, Number(price)];
               
-        setValues(newArray);
+        setBurgerValues(newArray);
 
     }
 
     useEffect(()=>{
 
-        
+        console.log('values',values)
+       
         const sum = values.reduce((a, b) => a + b, 0);
         
         setSubTotal(sum);
 
-        console.log('effect',subtotal)
-
-    },[values])
+    },[aditionalValues])
 
     const removeBurger = (id: number) => {
         // burger.filter(({ id }) => id !== id);
@@ -59,22 +60,29 @@ export default function TrayItemsProvider({ children }: { children: ReactNode })
 
     const addAditionals = ({ id, name, price }: { id: number; name: string; price: number; }) => {
 
-        console.log(burger)
-
         const newAditionals = [...aditionals, { id, name, price }];
 
-        setValues([Number(price), ...values]);
+        setAditionalValues([Number(price), ...values]);
 
         setAditionals(newAditionals);
 
     }
 
-    const removeAditionals = (id: number) => {
+    const removeAditionals = ({id}:{id:number}) => {
 
         const aditional = aditionals.find((item)=> item.id === id);
 
         if (aditional) {
             const filtered = aditionals.filter((item) => item.id !== id);
+
+            aditionalValues.splice(aditionalValues.indexOf(Number(aditional.price)), 1);
+
+            setAditionalValues([...aditionalValues]);
+
+
+            console.log('newvalues',aditionalValues)
+
+
             setAditionals(filtered)
         }
 
