@@ -1,7 +1,16 @@
+import { useState } from "react";
+import { Burgers } from "../../Types/BurgerType";
 import Button from "../Button"
 import { Title } from "../Title"
 
+
+
 export const Carte = () => {
+
+    const [burgers] = useState<Burgers[]>([]);
+
+
+
     return (
         <>
         
