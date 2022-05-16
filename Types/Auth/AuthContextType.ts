@@ -5,4 +5,6 @@ export type AuthContextType = {
   onRegisterFormSubmit: (data: RegisterFormData) => void;
   onLoginFormSubmit: (data: LoginFormData) => void;
   token: string | null;
+  loginFormIsLoading: boolean;
+  registerFormIsLoading: boolean;
 };
