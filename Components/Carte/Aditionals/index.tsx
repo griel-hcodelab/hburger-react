@@ -12,7 +12,7 @@ type AditionalsPropsType = {
 
 export const Aditionals = ({ id, keys }: AditionalsPropsType) => {
 
-    const { aditionals, addAditionals, removeAditionals } = useTrayItems()
+    const { setAditional, aditional } = useTrayItems()
 
     const [ingredientByType, setIngredientByTypes] = useState<IngredientByType[]>([]);
 
@@ -28,12 +28,17 @@ export const Aditionals = ({ id, keys }: AditionalsPropsType) => {
 
         if (e.target.checked) {
 
-            addAditionals({ id, name, price });
+            setAditional([...aditional, { id, name, price }]);
 
         } else {
-            removeAditionals({id})
-        }
+            const filteredAditional = aditional.find((item: any)=> item.id === id);
 
+            if (filteredAditional) {
+                const filtered = aditional.filter((item) => item.id !== id);
+                setAditional(filtered)
+            }
+
+        }
 
     }
 

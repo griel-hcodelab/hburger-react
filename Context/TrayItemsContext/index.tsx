@@ -3,104 +3,107 @@ import { TrayItemsTypes } from "../../Types/Contexts/TrayItemsTypes";
 
 type TrayItemsTypesProps = {
 
-    burger: TrayItemsTypes[],
-    aditionals: TrayItemsTypes[],
-    subtotal: number;
-    removeAditionals: (aditionals: any) => void;
-    removeBurger: (burger: any) => void;
-    setBurger: (burger: any) => void;
-    addAditionals: (aditionals: any) => void;
-    setSubTotal: (subtotal: number) => void;
-    addBurger: (burger: any) => void;
+    setBurger: (burger: TrayItemsTypes) => void,
+    setAditional: (aditional: TrayItemsTypes[]) => void,
+
+    aditional: TrayItemsTypes[],
+    subTotal: number,
+
 }
 
 const TrayItemsContext = createContext<TrayItemsTypesProps>({
-    aditionals: [],
-    burger: [],
-    subtotal: 0,
-    removeAditionals: () => { },
-    removeBurger: () => { },
+
     setBurger: () => { },
-    addAditionals: () => { },
-    setSubTotal: () => { },
-    addBurger: () => { }
+    setAditional: () => { },
+
+    aditional: [],
+    subTotal: 0,
 });
 
 export default function TrayItemsProvider({ children }: { children: ReactNode }) {
 
-    const [burger, setBurger] = useState<TrayItemsTypes[]>([]);
-    const [aditionals, setAditionals] = useState<TrayItemsTypes[]>([]);
-    const [subtotal, setSubTotal] = useState<number>(0);
-
-    const [burgerValues, setBurgerValues] = useState<number[]>([])
-    const [aditionalsValues, setAditionalsValues] = useState<number[]>([])
-
-    const addBurger = ({ id, name, price }: { id: number; name: string; price: number; }) => {
-
-        const newArray = [...burgerValues, Number(price)];
-              
-        setBurgerValues(newArray);
-
-    }
+    const [burger, setBurger] = useState<TrayItemsTypes>();
+    const [aditional, setAditional] = useState<TrayItemsTypes[]>([]);
+    const [subTotal, setSubTotal] = useState<number>(0);
 
     useEffect(()=>{
 
-        console.log('values',values)
+        const aditionalsPrice = aditional.reduce((total, item) => total + Number(item.price), 0);
+
+        setSubTotal(aditionalsPrice + +burger?.price)
+
+    },[burger, aditional])
+
+    const oculto = {
+    // const [burger, setBurger] = useState<TrayItemsTypes[]>([]);
+    // const [aditionals, setAditionals] = useState<TrayItemsTypes[]>([]);
+    // const [subtotal, setSubTotal] = useState<number>(0);
+
+    // const [burgerValues, setBurgerValues] = useState<number[]>([])
+    // const [aditionalsValues, setAditionalsValues] = useState<number[]>([])
+
+    // const addBurger = ({ id, name, price }: { id: number; name: string; price: number; }) => {
+
+    //     const newArray = [...burgerValues, Number(price)];
+              
+    //     setBurgerValues(newArray);
+
+    // }
+
+    // useEffect(()=>{
+
+    //     console.log('values',values)
        
-        const sum = values.reduce((a, b) => a + b, 0);
+    //     const sum = values.reduce((a, b) => a + b, 0);
         
-        setSubTotal(sum);
+    //     setSubTotal(sum);
 
-    },[aditionalValues])
+    // },[aditionalValues])
 
-    const removeBurger = (id: number) => {
-        // burger.filter(({ id }) => id !== id);
+    // const removeBurger = (id: number) => {
+    //     // burger.filter(({ id }) => id !== id);
 
-    }
+    // }
 
-    const addAditionals = ({ id, name, price }: { id: number; name: string; price: number; }) => {
+    // const addAditionals = ({ id, name, price }: { id: number; name: string; price: number; }) => {
 
-        const newAditionals = [...aditionals, { id, name, price }];
+    //     const newAditionals = [...aditionals, { id, name, price }];
 
-        setAditionalValues([Number(price), ...values]);
+    //     setAditionalValues([Number(price), ...values]);
 
-        setAditionals(newAditionals);
+    //     setAditionals(newAditionals);
 
-    }
+    // }
 
-    const removeAditionals = ({id}:{id:number}) => {
+    // const removeAditionals = ({id}:{id:number}) => {
 
-        const aditional = aditionals.find((item)=> item.id === id);
+    //     const aditional = aditionals.find((item)=> item.id === id);
 
-        if (aditional) {
-            const filtered = aditionals.filter((item) => item.id !== id);
+    //     if (aditional) {
+    //         const filtered = aditionals.filter((item) => item.id !== id);
 
-            aditionalValues.splice(aditionalValues.indexOf(Number(aditional.price)), 1);
+    //         aditionalValues.splice(aditionalValues.indexOf(Number(aditional.price)), 1);
 
-            setAditionalValues([...aditionalValues]);
-
-
-            console.log('newvalues',aditionalValues)
+    //         setAditionalValues([...aditionalValues]);
 
 
-            setAditionals(filtered)
-        }
+    //         console.log('newvalues',aditionalValues)
 
 
+    //         setAditionals(filtered)
+    //     }
+
+
+    // }
     }
 
     return (
         <TrayItemsContext.Provider value={
             {
-                aditionals,
-                burger,
-                subtotal,
-                removeAditionals,
                 setBurger,
-                removeBurger,
-                addAditionals,
-                setSubTotal,
-                addBurger
+                setAditional,
+                aditional,
+                subTotal
             }
         }>
             {children}

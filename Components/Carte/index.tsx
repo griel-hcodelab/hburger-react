@@ -31,8 +31,8 @@ const CarteComponent = () => {
 
 	const [burgers, setBurgers] = useState<Burgers[]>([]);
 	const [ingredientType, setIngredientTypes] = useState<IngredientType[]>([]);
-	const [hasSelectedBurger, setHaveSelectedBurger] = useState<number | null>(null);
-	const [selectedBurger, setSelectedBurger] = useState<selectedBurger>();
+	const [selectedBurger, setSelectedBurger] = useState<selectedBurger>()
+	const { setBurger, subTotal } = useTrayItems();
 
 
 	const getBurgers = async () => {
@@ -51,27 +51,26 @@ const CarteComponent = () => {
 		return results;
 	}
 
-	const { setBurger, subtotal, setSubTotal, addBurger } = useTrayItems();
+	
 
 	const sendBurgerToTray = ()=>{
 
-		setBurger(selectedBurger)
-
-		// setHaveSelectedBurger(null)
-		// addAditionals([])
+		//enviar o lanche para a bandeja
 		
 	}
 
 	const saveBurger = ({ id, name, price }: { id: number; name: string; price: number; }) => {
 
-		setHaveSelectedBurger(id)
-
-		addBurger({ id, name, price });
-
-		setSubTotal(Number(price));
-
+		setSelectedBurger({ id, name, price })
 
 	}
+
+	useEffect(()=>{
+		if (selectedBurger) {
+			setBurger(selectedBurger)
+		}
+	},[selectedBurger])
+	
 
 	const clearBurger = () => {
 		// setHaveSelectedBurger(null)
@@ -114,7 +113,7 @@ const CarteComponent = () => {
 			<main>
 				<Title text={<h1>Monte o seu <span>Hburger</span></h1>} />
 				<section>
-					<div className={hasSelectedBurger ? 'category hide' : 'category'} id="burger">
+					<div className={selectedBurger ? 'category hide' : 'category'} id="burger">
 						<h2>Escolha seu H-Burger</h2>
 						<p>Primeiro, escolha seu lanche. Você pode adicionar mais ingredientes depois.</p>
 						{burgers.length === 0 ? <Loading /> : ''}
@@ -135,7 +134,7 @@ const CarteComponent = () => {
 
 
 					</div>
-					{hasSelectedBurger && <div className="category" id="aditionals">
+					{selectedBurger && <div className="category" id="aditionals">
 						<>
 							<h2>Quer turbinar seu lanche? <small>(Você pode escolher a vontade, ou simplesmente avançar)</small></h2>
 
@@ -162,8 +161,8 @@ const CarteComponent = () => {
 				</section>
 			</main>
 			<footer>
-				<Button className="none" value="Colocar na bandeja" onClick={sendBurgerToTray} disabled={hasSelectedBurger ? false : true} tag={"button"} id="saveBurger" />
-				<h2>{formatPrice(Number(subtotal))}</h2>
+				<Button className="none" value="Colocar na bandeja" onClick={sendBurgerToTray} disabled={selectedBurger ? false : true} tag={"button"} id="saveBurger" />
+				<h2>{!isNaN(subTotal) ? formatPrice(Number(subTotal)) : formatPrice(0)}</h2>
 			</footer>
 		</>
 	)
