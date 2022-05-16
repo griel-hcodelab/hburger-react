@@ -11,24 +11,32 @@ export const Aside = () => {
 
     const [trayBurger, setTrayBurger] = useState([{}]);
 
-    const { burger, aditionals } = useTrayItems()
+    const { trayItems } = useTrayItems()
 
-    useEffect(() => {
+    useEffect(()=>{
 
-        const newArray = [{ burger, aditionals }];
+        //setTrayBurger([...trayBurger, trayItems])
+        
 
-        setTrayBurger(newArray)
-
-    }, [burger, aditionals])
-
-    useEffect(() => {
+        //setTrayBurger()
 
 
+        if (trayItems.length > 1) {
+            setTrayBurger(trayItems)
+        }
 
-        //console.log(trayBurger[0].burger)
+
+    },[trayItems])
+
+    useEffect(()=>{
 
 
-    }, [trayBurger])
+        trayBurger.map((item, index)=>{
+
+        })
+
+    },[trayBurger])
+
 
     return (
         <aside id="aside">
@@ -45,7 +53,7 @@ export const Aside = () => {
                 <ul>
 
 
-                    {trayBurger.map((item: any, index) => (
+                    {trayBurger?.map((item: any, index) => (
                         
                         <li className={item.burger?.name ? '' : styles.hide} key={index}>
                             <>
@@ -60,7 +68,7 @@ export const Aside = () => {
                                 </div>
                                 <div className={styles.aditionals}>
                                     <ul>
-                                        {item.aditionals?.map((aditionals: TrayItemsTypes, index: number) => (
+                                        {item.aditional?.map((aditionals: TrayItemsTypes, index: number) => (
                                             <li><span>{aditionals.name}</span><span>{formatPrice(parseFloat(aditionals.price))}</span></li>
                                         ))}
                                     </ul>

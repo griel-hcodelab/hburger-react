@@ -1,13 +1,20 @@
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { TrayItemsTypes } from "../../Types/Contexts/TrayItemsTypes";
 
+type TrayItems = {
+    burger: any;
+    aditional: TrayItemsTypes;
+}
+
 type TrayItemsTypesProps = {
 
     setBurger: (burger: TrayItemsTypes) => void,
     setAditional: (aditional: TrayItemsTypes[]) => void,
+    sendBurgerToTray: () => void,
 
     aditional: TrayItemsTypes[],
     subTotal: number,
+    trayItems: TrayItems[],
 
 }
 
@@ -15,16 +22,19 @@ const TrayItemsContext = createContext<TrayItemsTypesProps>({
 
     setBurger: () => { },
     setAditional: () => { },
+    sendBurgerToTray: () => { },
 
     aditional: [],
     subTotal: 0,
+    trayItems: [],
 });
 
 export default function TrayItemsProvider({ children }: { children: ReactNode }) {
 
-    const [burger, setBurger] = useState<TrayItemsTypes>();
+    const [burger, setBurger] = useState<TrayItemsTypes | null>();
     const [aditional, setAditional] = useState<TrayItemsTypes[]>([]);
     const [subTotal, setSubTotal] = useState<number>(0);
+    const [trayItems, setTrayItems] = useState<any>([{}]);
 
     useEffect(()=>{
 
@@ -33,6 +43,17 @@ export default function TrayItemsProvider({ children }: { children: ReactNode })
         setSubTotal(aditionalsPrice + +burger?.price)
 
     },[burger, aditional])
+
+    const sendBurgerToTray = ()=>{
+
+        const array = [trayItems];
+
+        array.push({burger, aditional});
+
+        setTrayItems(array)
+
+        setBurger(null); setAditional([]);
+    }
 
     const oculto = {
     // const [burger, setBurger] = useState<TrayItemsTypes[]>([]);
@@ -102,8 +123,10 @@ export default function TrayItemsProvider({ children }: { children: ReactNode })
             {
                 setBurger,
                 setAditional,
+                sendBurgerToTray,
                 aditional,
-                subTotal
+                subTotal,
+                trayItems
             }
         }>
             {children}

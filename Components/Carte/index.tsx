@@ -31,8 +31,8 @@ const CarteComponent = () => {
 
 	const [burgers, setBurgers] = useState<Burgers[]>([]);
 	const [ingredientType, setIngredientTypes] = useState<IngredientType[]>([]);
-	const [selectedBurger, setSelectedBurger] = useState<selectedBurger>()
-	const { setBurger, subTotal } = useTrayItems();
+	const [selectedBurger, setSelectedBurger] = useState<selectedBurger | null>()
+	const { setBurger, sendBurgerToTray, subTotal } = useTrayItems();
 
 
 	const getBurgers = async () => {
@@ -51,20 +51,6 @@ const CarteComponent = () => {
 		return results;
 	}
 
-	
-
-	const sendBurgerToTray = ()=>{
-
-		//enviar o lanche para a bandeja
-		
-	}
-
-	const saveBurger = ({ id, name, price }: { id: number; name: string; price: number; }) => {
-
-		setSelectedBurger({ id, name, price })
-
-	}
-
 	useEffect(()=>{
 		if (selectedBurger) {
 			setBurger(selectedBurger)
@@ -73,9 +59,7 @@ const CarteComponent = () => {
 	
 
 	const clearBurger = () => {
-		// setHaveSelectedBurger(null)
-		// addAditionals([])
-		// setBurger([])
+		setSelectedBurger(null)
 
 		document.querySelectorAll("input[type='radio']").forEach((item: any) => {
 
@@ -83,11 +67,11 @@ const CarteComponent = () => {
 
 		})
 
-		// document.querySelectorAll("input[type='checkbox']").forEach((item: any) => {
+		document.querySelectorAll("input[type='checkbox']").forEach((item: any) => {
 
-		// 	item.checked = false;
+			item.checked = false;
 
-		// })
+		})
 
 	}
 
@@ -123,7 +107,7 @@ const CarteComponent = () => {
 							{burgers && burgers.map(({ id, name, price, description }, index) => (
 								<li key={index}>
 									<label data-id="2" className='inputRadio' data-burgername={name} data-name={name} data-price={price}>
-										<input type="radio" name="burger" id={`burger-${id}`} onChange={(e) => { saveBurger({ id, name, price }) }} />
+										<input type="radio" name="burger" id={`burger-${id}`} onChange={(e) => { setSelectedBurger({ id, name, price }) }} />
 										<span className="spanRadio"></span>
 										<h3>{name} <span>({description})</span></h3>
 										<div>{formatPrice(price)}</div>
@@ -161,7 +145,7 @@ const CarteComponent = () => {
 				</section>
 			</main>
 			<footer>
-				<Button className="none" value="Colocar na bandeja" onClick={sendBurgerToTray} disabled={selectedBurger ? false : true} tag={"button"} id="saveBurger" />
+				<Button className="none" value="Colocar na bandeja" onClick={()=>{sendBurgerToTray(); clearBurger()}} disabled={selectedBurger ? false : true} tag={"button"} id="saveBurger" />
 				<h2>{!isNaN(subTotal) ? formatPrice(Number(subTotal)) : formatPrice(0)}</h2>
 			</footer>
 		</>
