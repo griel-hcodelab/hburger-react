@@ -113,10 +113,13 @@
 
 @mixin header {
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   height: 350px;
   a {
     @include logo;
+  }
+  @media (min-width: 768px) {
+    align-items: center;
   }
 }
 
