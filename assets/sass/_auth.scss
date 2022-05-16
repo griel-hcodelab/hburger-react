@@ -4,9 +4,10 @@
 #auth {
     background-color: colors.$bgLogin;
     background-image: url("/images/bg.svg");
+    height: 100vh;
     header {
         @include components.header;
-        height: 275px;
+        height: 250px;
     }
     main {
         align-items: center;
