@@ -11,6 +11,7 @@ type TrayItemsTypesProps = {
     setBurger: (burger: TrayItemsTypes) => void,
     setAditional: (aditional: TrayItemsTypes[]) => void,
     sendBurgerToTray: () => void,
+    removeBurger: (e:any) => void,
 
     aditional: TrayItemsTypes[],
     subTotal: number,
@@ -23,6 +24,7 @@ const TrayItemsContext = createContext<TrayItemsTypesProps>({
     setBurger: () => { },
     setAditional: () => { },
     sendBurgerToTray: () => { },
+    removeBurger: () => { },
 
     aditional: [],
     subTotal: 0,
@@ -35,6 +37,7 @@ export default function TrayItemsProvider({ children }: { children: ReactNode })
     const [aditional, setAditional] = useState<TrayItemsTypes[]>([]);
     const [subTotal, setSubTotal] = useState<number>(0);
     const [trayItems, setTrayItems] = useState<any>([{}]);
+    
 
     useEffect(()=>{
 
@@ -46,12 +49,29 @@ export default function TrayItemsProvider({ children }: { children: ReactNode })
 
     const sendBurgerToTray = ()=>{
 
+        const id = trayItems.length;
 
-        setTrayItems([...trayItems, {burger, aditional, subTotal}])
+        setTrayItems([...trayItems, {burger, aditional, subTotal, id}])
 
         setBurger(null); setAditional([]);
 
-        console.log(trayItems)
+    }
+
+    const removeBurger = (e:any)=>{
+
+        const burgerId:number = Number(e.target.closest('li').dataset.key);
+
+        const aditional = trayItems.find((item:any)=> item.id === burgerId);
+
+        if (aditional) {
+            const filtered = trayItems.filter((item:any) => item.id !== burgerId);
+            console.log(filtered.length)
+            if (filtered.length === 1) {
+                setTrayItems([])
+            } else {
+                setTrayItems(filtered)
+            }
+        }
     }
 
     const oculto = {
@@ -123,6 +143,7 @@ export default function TrayItemsProvider({ children }: { children: ReactNode })
                 setBurger,
                 setAditional,
                 sendBurgerToTray,
+                removeBurger,
                 aditional,
                 subTotal,
                 trayItems

@@ -11,31 +11,16 @@ export const Aside = () => {
 
     const [trayBurger, setTrayBurger] = useState([{}]);
 
-    const { trayItems } = useTrayItems()
+    const { trayItems, removeBurger } = useTrayItems()
 
     useEffect(()=>{
-
-        //setTrayBurger([...trayBurger, trayItems])
-        
-
-        //setTrayBurger()
-
 
         if (trayItems.length > 1) {
             setTrayBurger(trayItems)
         }
 
-
     },[trayItems])
 
-    useEffect(()=>{
-
-
-        trayBurger.map((item, index)=>{
-
-        })
-
-    },[trayBurger])
 
 
     return (
@@ -53,14 +38,14 @@ export const Aside = () => {
                 <ul>
 
 
-                    {trayBurger?.map((item: any, index) => (
+                    {trayItems.length > 0 && trayBurger?.map((item: any, index) => (
                         
-                        <li className={item.burger?.name ? '' : styles.hide} key={index}>
+                        <li data-key={item.id} className={item.burger?.name ? '' : styles.hide} key={index}>
                             <>
                                 <div className={styles.burger}>
                                     <div>{item.burger?.name}</div>
                                     <div>{formatPrice(parseFloat(item.burger?.price))}</div>
-                                    <button type="button" id="{item.trayID}" aria-label="Remover Hamburguer">
+                                    <button type="button" id="{item.trayID}" aria-label="Remover Hamburguer" onClick={removeBurger}>
                                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M6 19C6 20.1 6.9 21 8 21H16C17.1 21 18 20.1 18 19V7H6V19ZM19 4H15.5L14.5 3H9.5L8.5 4H5V6H19V4Z" fill="black" />
                                         </svg>
