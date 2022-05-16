@@ -20,9 +20,9 @@ export const Aside = () => {
 
     }, [trayItems])
 
-    const { token } = useAuth()
+    const { user } = useAuth()
 
-    console.log(trayItems)
+    console.log(user)
 
 
     return (
