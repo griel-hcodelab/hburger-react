@@ -5,6 +5,7 @@ import Carte from '../Components/Carte'
 import { Header } from '../Components/Header'
 import { MetaTitle } from '../Components/Header/MetaTitle'
 import TrayContext from '../Context/TrayContext'
+import AuthContext from '../Context/AuthContext'
 import TrayItemsContext, { useTrayItems } from '../Context/TrayItemsContext'
 
 const ComponentPage: NextPage = () => {
@@ -12,6 +13,7 @@ const ComponentPage: NextPage = () => {
     <>
     <MetaTitle title="HBurger" />
     <Fragment>
+      <AuthContext>
       <TrayContext>
       <div id="app">
         <TrayItemsContext>
@@ -23,6 +25,7 @@ const ComponentPage: NextPage = () => {
         </TrayItemsContext>
       </div>
       </TrayContext>
+      </AuthContext>
     </Fragment>
     </>
   )
