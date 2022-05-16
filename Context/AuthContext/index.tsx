@@ -96,7 +96,14 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const initAuth = () => {
     axios
       .get<AuthenticationResponse>('/api/session')
-      .then(({ data: { token } }) => setToken(token));
+      .then(({ data: { token } }) => {
+        setToken(token);
+      })
+      .catch(() => {
+        router.push('/login');
+      });
+
+    console.log('auth');
   };
 
   useEffect(() => {

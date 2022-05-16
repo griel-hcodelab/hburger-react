@@ -12,7 +12,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   } else {
     req.session.destroy();
     await req.session.save();
-    res.status(401);
+    res.status(401).send({ message: 'Unauthenticated.' });
   }
 };
 
