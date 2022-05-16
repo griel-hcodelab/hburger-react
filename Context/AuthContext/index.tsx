@@ -79,15 +79,15 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     try {
       setForgotPasswordFormIsLoading(true);
 
-      const data = await axios.post(
+      const { data } = await axios.post(
         '/login/forget',
         { email },
         { baseURL: process.env.API_URL },
       );
 
-      console.log(data);
+      alert(data.message);
     } catch (error) {
-      console.error(error);
+      alert('Não foi possível enviar o e-mail de recuperação de senha.');
     } finally {
       setForgotPasswordFormIsLoading(false);
     }
