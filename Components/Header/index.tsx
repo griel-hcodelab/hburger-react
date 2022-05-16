@@ -1,7 +1,11 @@
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 export const Header = () => {
+    
+    const [ open, setIsOpen ] = useState(false);
+
+
 
     return (
         <header>
@@ -19,7 +23,7 @@ export const Header = () => {
                     />
                 </a>
             </Link>
-            <div className="profileMenu">
+            <div className={["profileMenu", open ? "show" : ""].join(" ")}>
                 <Link href="/profile">
                     <a>Alterar Dados</a>
                 </Link>
@@ -37,6 +41,7 @@ export const Header = () => {
                 src="/images/default.png" 
                 alt="Avatar" 
                 className="avatar"
+                onClick={() => setIsOpen(!open)}
             />
             <small className="userName">Davi Matana</small>
         </header>
