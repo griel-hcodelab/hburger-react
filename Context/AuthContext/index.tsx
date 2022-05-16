@@ -10,15 +10,18 @@ import {
 import { AuthContextType } from '../../Types/Auth/AuthContextType';
 import { AuthenticationResponse } from '../../Types/Auth/AuthenticationResponse';
 import { AuthProviderProps } from '../../Types/Auth/AuthProviderProps';
+import { ForgotPasswordFormData } from '../../Types/Auth/ForgotPasswordFormData';
 import { LoginFormData } from '../../Types/Auth/LoginFormData';
 import { RegisterFormData } from '../../Types/Auth/RegisterFormData';
 
 const AuthContext = createContext<AuthContextType>({
   onRegisterFormSubmit: () => {},
   onLoginFormSubmit: () => {},
+  onForgotPasswordFormSubmit: () => {},
   token: null,
   loginFormIsLoading: false,
   registerFormIsLoading: false,
+  forgotPasswordFormIsLoading: false,
 });
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
@@ -27,6 +30,8 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const [nextURL] = useState('/');
   const [loginFormIsLoading, setloginFormIsLoading] = useState(false);
   const [registerFormIsLoading, setRegisterFormIsLoading] = useState(false);
+  const [forgotPasswordFormIsLoading, setForgotPasswordFormIsLoading] =
+    useState(false);
 
   const redirectToNextURL = useCallback(
     () => router.push(nextURL),
@@ -68,6 +73,26 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
+  const onForgotPasswordFormSubmit = async ({
+    email,
+  }: ForgotPasswordFormData) => {
+    try {
+      setForgotPasswordFormIsLoading(true);
+
+      const data = await axios.post(
+        '/login/forget',
+        { email },
+        { baseURL: process.env.API_URL },
+      );
+
+      console.log(data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setForgotPasswordFormIsLoading(false);
+    }
+  };
+
   const initAuth = () => {
     axios
       .get<AuthenticationResponse>('/api/session')
@@ -83,9 +108,11 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       value={{
         onRegisterFormSubmit,
         onLoginFormSubmit,
+        onForgotPasswordFormSubmit,
         token,
         loginFormIsLoading,
         registerFormIsLoading,
+        forgotPasswordFormIsLoading,
       }}
     >
       {children}
