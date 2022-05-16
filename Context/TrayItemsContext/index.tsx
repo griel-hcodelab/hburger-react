@@ -39,7 +39,7 @@ export default function TrayItemsProvider({ children }: { children: ReactNode })
     const [aditional, setAditional] = useState<TrayItemsTypes[]>([]);
     const [subTotal, setSubTotal] = useState<number>(0);
     const [total, setTotal] = useState<number>(0);
-    const [trayItems, setTrayItems] = useState<any>([{}]);
+    const [trayItems, setTrayItems] = useState<any>([]);
     
 
     useEffect(()=>{
@@ -51,6 +51,8 @@ export default function TrayItemsProvider({ children }: { children: ReactNode })
     },[burger, aditional])
 
     useEffect(()=>{
+
+        console.log(trayItems.length)
 
         const sum:number[] = []
 
@@ -84,11 +86,8 @@ export default function TrayItemsProvider({ children }: { children: ReactNode })
 
         if (aditional) {
             const filtered = trayItems.filter((item:any) => item.id !== burgerId);
-            if (filtered.length === 1) {
-                setTrayItems([])
-            } else {
-                setTrayItems(filtered)
-            }
+            setTrayItems(filtered)
+            console.log(filtered)
         }
     }
 
