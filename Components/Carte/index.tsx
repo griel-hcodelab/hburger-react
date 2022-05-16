@@ -120,12 +120,12 @@ const CarteComponent = () => {
 
 							{ingredientType &&
 								ingredientType.map(({ id, name, description }, index) => (
-									<>
+									<Fragment key={index}>
 										<H3 key={index}>{name} <p>{description}</p></H3>
 
 										<Aditionals id={id} />
 
-									</>
+									</Fragment>
 
 
 								))
@@ -150,7 +150,7 @@ const CarteComponent = () => {
 export default function Carte() {
 	return (
 
-		<CarteComponent key={Math.floor(Math.random() * 100)} />
+		<CarteComponent />
 
 	)
 }

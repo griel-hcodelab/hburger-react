@@ -1,4 +1,5 @@
 import { SetStateAction, useEffect, useState } from "react";
+import { useAuth } from "../../Context/AuthContext";
 import { useTray } from "../../Context/TrayContext"
 import { useTrayItems } from "../../Context/TrayItemsContext";
 import { TrayItemsTypes } from "../../Types/Contexts/TrayItemsTypes";
@@ -19,6 +20,9 @@ export const Aside = () => {
 
     }, [trayItems])
 
+    const { token } = useAuth()
+
+    console.log(trayItems)
 
 
     return (
