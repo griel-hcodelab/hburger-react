@@ -10,19 +10,28 @@ import {
 import { AuthContextType } from '../../Types/Auth/AuthContextType';
 import { AuthenticationResponse } from '../../Types/Auth/AuthenticationResponse';
 import { AuthProviderProps } from '../../Types/Auth/AuthProviderProps';
+import { ForgotPasswordFormData } from '../../Types/Auth/ForgotPasswordFormData';
 import { LoginFormData } from '../../Types/Auth/LoginFormData';
 import { RegisterFormData } from '../../Types/Auth/RegisterFormData';
 
 const AuthContext = createContext<AuthContextType>({
   onRegisterFormSubmit: () => {},
   onLoginFormSubmit: () => {},
+  onForgotPasswordFormSubmit: () => {},
   token: null,
+  loginFormIsLoading: false,
+  registerFormIsLoading: false,
+  forgotPasswordFormIsLoading: false,
 });
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
   const router = useRouter();
   const [token, setToken] = useState<string | null>(null);
   const [nextURL] = useState('/');
+  const [loginFormIsLoading, setloginFormIsLoading] = useState(false);
+  const [registerFormIsLoading, setRegisterFormIsLoading] = useState(false);
+  const [forgotPasswordFormIsLoading, setForgotPasswordFormIsLoading] =
+    useState(false);
 
   const redirectToNextURL = useCallback(
     () => router.push(nextURL),
@@ -31,6 +40,8 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const onRegisterFormSubmit = async (formData: RegisterFormData) => {
     try {
+      setRegisterFormIsLoading(true);
+
       const { data } = await axios.post('/api/register', {
         name: formData.name,
         email: formData.email,
@@ -42,24 +53,57 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       redirectToNextURL();
     } catch (error: any) {
       alert(error.response.data.message);
+    } finally {
+      setRegisterFormIsLoading(false);
     }
   };
 
   const onLoginFormSubmit = async (formData: LoginFormData) => {
     try {
+      setloginFormIsLoading(true);
+
       const { data } = await axios.post(`/api/login`, formData);
 
       setToken(data.token);
       redirectToNextURL();
     } catch (error: any) {
       alert(error.response.data.message);
+    } finally {
+      setloginFormIsLoading(false);
+    }
+  };
+
+  const onForgotPasswordFormSubmit = async ({
+    email,
+  }: ForgotPasswordFormData) => {
+    try {
+      setForgotPasswordFormIsLoading(true);
+
+      const { data } = await axios.post(
+        '/login/forget',
+        { email },
+        { baseURL: process.env.API_URL },
+      );
+
+      alert(data.message);
+    } catch (error) {
+      alert('Não foi possível enviar o e-mail de recuperação de senha.');
+    } finally {
+      setForgotPasswordFormIsLoading(false);
     }
   };
 
   const initAuth = () => {
     axios
       .get<AuthenticationResponse>('/api/session')
-      .then(({ data: { token } }) => setToken(token));
+      .then(({ data: { token } }) => {
+        setToken(token);
+      })
+      .catch(() => {
+        router.push('/login');
+      });
+
+    console.log('auth');
   };
 
   useEffect(() => {
@@ -68,7 +112,15 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
   return (
     <AuthContext.Provider
-      value={{ onRegisterFormSubmit, onLoginFormSubmit, token }}
+      value={{
+        onRegisterFormSubmit,
+        onLoginFormSubmit,
+        onForgotPasswordFormSubmit,
+        token,
+        loginFormIsLoading,
+        registerFormIsLoading,
+        forgotPasswordFormIsLoading,
+      }}
     >
       {children}
     </AuthContext.Provider>
