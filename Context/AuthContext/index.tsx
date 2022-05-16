@@ -13,12 +13,14 @@ import { AuthProviderProps } from '../../Types/Auth/AuthProviderProps';
 import { ForgotPasswordFormData } from '../../Types/Auth/ForgotPasswordFormData';
 import { LoginFormData } from '../../Types/Auth/LoginFormData';
 import { RegisterFormData } from '../../Types/Auth/RegisterFormData';
+import { User } from '../../Types/Auth/User';
 
 const AuthContext = createContext<AuthContextType>({
   onRegisterFormSubmit: () => {},
   onLoginFormSubmit: () => {},
   onForgotPasswordFormSubmit: () => {},
   token: null,
+  user: null,
   loginFormIsLoading: false,
   registerFormIsLoading: false,
   forgotPasswordFormIsLoading: false,
@@ -27,6 +29,7 @@ const AuthContext = createContext<AuthContextType>({
 const AuthProvider = ({ children }: AuthProviderProps) => {
   const router = useRouter();
   const [token, setToken] = useState<string | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [nextURL] = useState('/');
   const [loginFormIsLoading, setloginFormIsLoading] = useState(false);
   const [registerFormIsLoading, setRegisterFormIsLoading] = useState(false);
@@ -62,9 +65,9 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     try {
       setloginFormIsLoading(true);
 
-      const { data } = await axios.post(`/api/login`, formData);
+      await axios.post(`/api/login`, formData);
 
-      setToken(data.token);
+      initAuth();
       redirectToNextURL();
     } catch (error: any) {
       alert(error.response.data.message);
@@ -96,14 +99,13 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const initAuth = () => {
     axios
       .get<AuthenticationResponse>('/api/session')
-      .then(({ data: { token } }) => {
+      .then(({ data: { token, user } }) => {
         setToken(token);
+        setUser(user);
       })
       .catch(() => {
         router.push('/login');
       });
-
-    console.log('auth');
   };
 
   useEffect(() => {
@@ -117,6 +119,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         onLoginFormSubmit,
         onForgotPasswordFormSubmit,
         token,
+        user,
         loginFormIsLoading,
         registerFormIsLoading,
         forgotPasswordFormIsLoading,
