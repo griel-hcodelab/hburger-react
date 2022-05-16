@@ -46,13 +46,12 @@ export default function TrayItemsProvider({ children }: { children: ReactNode })
 
     const sendBurgerToTray = ()=>{
 
-        const array = [trayItems];
 
-        array.push({burger, aditional});
-
-        setTrayItems(array)
+        setTrayItems([...trayItems, {burger, aditional, subTotal}])
 
         setBurger(null); setAditional([]);
+
+        console.log(trayItems)
     }
 
     const oculto = {
