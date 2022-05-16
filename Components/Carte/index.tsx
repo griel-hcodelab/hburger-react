@@ -21,12 +21,6 @@ type selectedBurger = {
 	price: number;
 }
 
-/**
- * @todo: salvar lanche, voltar pra fazer outro
- * @todo: adicionar ingredientes na bandeja somente após salvar o lanche
- * 
- */
-
 const CarteComponent = () => {
 
 	const [burgers, setBurgers] = useState<Burgers[]>([]);

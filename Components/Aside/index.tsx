@@ -13,11 +13,11 @@ export const Aside = () => {
 
     const { total, trayItems, removeBurger } = useTrayItems()
 
-    useEffect(()=>{
+    useEffect(() => {
 
         setTrayBurger(trayItems)
 
-    },[trayItems])
+    }, [trayItems])
 
 
 
@@ -37,24 +37,28 @@ export const Aside = () => {
 
 
                     {trayItems && trayBurger?.map((item: any, index) => (
-                        
+
                         <li data-key={item.id} className={item.burger?.name ? '' : styles.hide} key={index}>
                             <>
                                 <div className={styles.burger}>
                                     <div>{item.burger?.name}</div>
-                                    <div>{formatPrice(parseFloat(item.burger?.price))}</div>
+                                    <div>{formatPrice(item.subTotal)}</div>
                                     <button type="button" id="{item.trayID}" aria-label="Remover Hamburguer" onClick={removeBurger}>
                                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M6 19C6 20.1 6.9 21 8 21H16C17.1 21 18 20.1 18 19V7H6V19ZM19 4H15.5L14.5 3H9.5L8.5 4H5V6H19V4Z" fill="black" />
+                                        	<path d="M6 19C6 20.1 6.9 21 8 21H16C17.1 21 18 20.1 18 19V7H6V19ZM19 4H15.5L14.5 3H9.5L8.5 4H5V6H19V4Z" fill="black" />
                                         </svg>
                                     </button>
                                 </div>
                                 <div className={styles.aditionals}>
                                     <ul>
+                                        <li><strong>Lanche</strong> {formatPrice(parseFloat(item.burger?.price))}</li>
+                                    </ul>
+                                    <ul>
                                         {item.aditional?.map((aditionals: TrayItemsTypes, index: number) => (
                                             <li><span>{aditionals.name}</span><span>{formatPrice(parseFloat(aditionals.price))}</span></li>
                                         ))}
                                     </ul>
+
                                 </div>
 
                             </>
