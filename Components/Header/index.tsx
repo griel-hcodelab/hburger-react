@@ -1,7 +1,7 @@
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 export const Header = () => {
-    const menuOpen = "show";
 
     return (
         <header>
@@ -23,7 +23,7 @@ export const Header = () => {
                 <Link href="/profile">
                     <a>Alterar Dados</a>
                 </Link>
-                <Link href="/orders">
+                <Link href="/orders-list">
                     <a>Seus Pedidos</a>
                 </Link>
                 <Link href="/change-photo">
@@ -36,7 +36,7 @@ export const Header = () => {
             <img 
                 src="/images/default.png" 
                 alt="Avatar" 
-                className="avatar" 
+                className="avatar"
             />
             <small className="userName">Davi Matana</small>
         </header>
