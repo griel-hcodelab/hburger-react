@@ -15,6 +15,7 @@ type TrayItemsTypesProps = {
 
     aditional: TrayItemsTypes[],
     subTotal: number,
+    total: number,
     trayItems: TrayItems[],
 
 }
@@ -28,6 +29,7 @@ const TrayItemsContext = createContext<TrayItemsTypesProps>({
 
     aditional: [],
     subTotal: 0,
+    total: 0,
     trayItems: [],
 });
 
@@ -36,6 +38,7 @@ export default function TrayItemsProvider({ children }: { children: ReactNode })
     const [burger, setBurger] = useState<TrayItemsTypes | null>();
     const [aditional, setAditional] = useState<TrayItemsTypes[]>([]);
     const [subTotal, setSubTotal] = useState<number>(0);
+    const [total, setTotal] = useState<number>(0);
     const [trayItems, setTrayItems] = useState<any>([{}]);
     
 
@@ -46,6 +49,22 @@ export default function TrayItemsProvider({ children }: { children: ReactNode })
         setSubTotal(aditionalsPrice + +burger?.price)
 
     },[burger, aditional])
+
+    useEffect(()=>{
+
+        const sum:number[] = []
+
+        trayItems.forEach((item:any)=>{
+            if (!isNaN(item.subTotal)) {
+                sum.push(item.subTotal)
+            }
+        })
+
+        const total = sum.reduce((total, item) => total + item, 0);
+
+        setTotal(total);
+
+    },[trayItems])
 
     const sendBurgerToTray = ()=>{
 
@@ -65,7 +84,6 @@ export default function TrayItemsProvider({ children }: { children: ReactNode })
 
         if (aditional) {
             const filtered = trayItems.filter((item:any) => item.id !== burgerId);
-            console.log(filtered.length)
             if (filtered.length === 1) {
                 setTrayItems([])
             } else {
@@ -146,6 +164,7 @@ export default function TrayItemsProvider({ children }: { children: ReactNode })
                 removeBurger,
                 aditional,
                 subTotal,
+                total,
                 trayItems
             }
         }>

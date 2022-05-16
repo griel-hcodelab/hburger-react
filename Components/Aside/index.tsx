@@ -11,7 +11,7 @@ export const Aside = () => {
 
     const [trayBurger, setTrayBurger] = useState([{}]);
 
-    const { trayItems, removeBurger } = useTrayItems()
+    const { total, trayItems, removeBurger } = useTrayItems()
 
     useEffect(()=>{
 
@@ -95,7 +95,7 @@ export const Aside = () => {
                     <span>Esconder Bandeja</span>
                 </div>
 
-                <div className="price"><small>Subtotal</small></div>
+                <div className="price"><small>Subtotal</small>{formatPrice(total)}</div>
 
                 <button type="button" aria-label="Pagar">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
