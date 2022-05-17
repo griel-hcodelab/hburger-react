@@ -123,6 +123,7 @@
             > header {
                 @include components.horizontalTitle;
                 width: 100%;
+                text-align: center;
                 > div {
                     width: 300px;
                     height: 45px;
