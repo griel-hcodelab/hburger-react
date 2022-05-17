@@ -41,6 +41,12 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     [nextURL, router],
   );
 
+  const requiresAuthentication = (route: string) => {
+    const noAuthRoutes = ['/login', '/register', '/forget', '/reset-password'];
+
+    return !noAuthRoutes.includes(route);
+  };
+
   const onRegisterFormSubmit = async (formData: RegisterFormData) => {
     try {
       setRegisterFormIsLoading(true);
@@ -104,7 +110,9 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         setUser(user);
       })
       .catch(() => {
-        router.push('/login');
+        if (requiresAuthentication(router.pathname)) {
+          router.push('/login');
+        }
       });
   };
 
