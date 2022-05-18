@@ -35,8 +35,21 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 'Authorization': `Bearer ${req.session.token}`
             }
         })
-        .then(()=>{
-            res.status(200);
+        .then(async ({data})=>{
+
+            const result = {
+                order: data.id,
+                person: data.person_id,
+                address: data.address_id,
+                total: data.total,
+                obervation: data.observation,
+            }
+
+            req.session.order = result;
+
+            await req.session.save();
+
+            return res.status(200).json(result);
         })
         .catch((e:any)=>{
             res.status(e.response.status);
