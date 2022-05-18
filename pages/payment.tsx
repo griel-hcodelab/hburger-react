@@ -226,6 +226,8 @@ const ComponentPage: NextPage<ComponentPageProps> = ({ amount = '1000' }) => {
             identificationType: cardDocument.length === 11 ? 'CPF' : 'CNPJ',
             identificationNumber: cardDocument,
         }).then((response: any) => {
+            console.log(response.cardholder);
+            
             createPayment({
                 cardToken: response.id,
                 document: cardDocument,
