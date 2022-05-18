@@ -5,7 +5,7 @@
 @use "form";
 @use "sass:color";
 
-#app {
+#__next {
     &.no-footer > section main {
         padding-bottom: 0;
     }
