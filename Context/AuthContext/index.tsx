@@ -99,9 +99,9 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         { baseURL: process.env.API_URL },
       );
 
-      alert(data.message);
+      return data.message;
     } catch (error) {
-      alert('Não foi possível enviar o e-mail de recuperação de senha.');
+      return 'Não foi possível enviar o e-mail de recuperação de senha.';
     } finally {
       setForgotPasswordFormIsLoading(false);
     }
