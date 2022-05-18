@@ -8,7 +8,7 @@ import { LoginFormData } from '../Types/Auth/LoginFormData';
 const PageComponent: NextPage = () => {
   const { register, handleSubmit } = useForm<LoginFormData>();
 
-  const { onLoginFormSubmit } = useAuth();
+  const { onLoginFormSubmit, loginFormIsLoading } = useAuth();
 
   return (
     <AuthLayout>
@@ -33,7 +33,9 @@ const PageComponent: NextPage = () => {
           <Link href="/forget">
             <a>Esqueceu a senha?</a>
           </Link>
-          <button type="submit">Enviar</button>
+          <button type="submit" disabled={loginFormIsLoading}>
+            {loginFormIsLoading ? 'Enviando' : 'Enviar'}
+          </button>
         </footer>
       </form>
     </AuthLayout>

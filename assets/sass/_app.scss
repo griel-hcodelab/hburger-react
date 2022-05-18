@@ -57,7 +57,27 @@
                 &.show {
                     opacity: 1;
                 }
-
+            }
+            .userName {
+                color: var(--white);
+                font-size: 20px;
+                z-index: 3;
+                position: absolute;
+                top: 27px;
+                right: 40px;
+                text-align: right;
+                text-transform: uppercase;
+                background-color: var(--primary);
+                padding: 5px 10px;
+                padding-right: 40px;
+                border-radius: 5px;
+                min-height: 34px;
+                /* Roberto */
+                min-height: 34px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                max-width: 50%;
             }
             @media (max-width: 768px) {
                 height: 200px;
@@ -70,6 +90,7 @@
             > header {
                 
                 width: 100%;
+                text-align: center;
                 > div {
                     width: 300px;
                     height: 45px;
@@ -97,7 +118,8 @@
                 @include components.category-list;
                 margin: var(--space);
                 ul {
-                    margin-top: var(--space);
+                    // margin-top: var(--space);
+                    margin-top: 0;
                     color: rgba(colors.$secondary, .7);
                     label {
                         flex-direction: row;
@@ -290,14 +312,13 @@
                 @include mixins.reset-list;
                 li {
                     display: flex;
-                    flex-direction: row;
+                    flex-direction: column;
                     justify-content: space-between;
                     align-items: center;
                     font-size: 16px;
                     font-weight: 600;
                     cursor: pointer;
                     transition: none;
-                    height: 48px;
                     border-bottom: var(--dark) 1px dotted;
                     &:hover div {
                         opacity: .7;
@@ -404,7 +425,11 @@
             }
         }
         &.open {
-            height: calc(100vh - 350px);
+            height: calc(100vh);
+            justify-content: space-between;
+            display: flex;
+            flex-direction: column;
+            z-index: 10;
             header, section {
                 padding: var(--space);
                 height: initial;

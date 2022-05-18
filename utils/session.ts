@@ -1,4 +1,5 @@
 import { IronSessionOptions } from 'iron-session';
+import { User } from '../Types/Auth/User';
 
 export const sessionOptions: IronSessionOptions = {
   cookieName: 'ferrari-hcodelab/iron-session',
@@ -11,5 +12,6 @@ export const sessionOptions: IronSessionOptions = {
 declare module 'iron-session' {
   interface IronSessionData {
     token: string;
+    user: User;
   }
 }
