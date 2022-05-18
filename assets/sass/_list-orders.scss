@@ -9,6 +9,7 @@
     height: calc(100vh - 430px);
     overflow: auto;
     > li {
+        position: relative;
         background-color: var(--white);
         border-radius: var(--radius);
         flex-direction: row;
@@ -35,16 +36,19 @@
             color: #000;
             text-align: center;
             z-index: 445;
-            transform: translate(0px, 0px);
+            // transform: translate(0px, 0px);
             background-color: #ff000063;
             height: 200px;
-            width: 0px;
+            width: 100%;
             justify-content: center;
             align-items: center;
             border-radius: 10px 0 0 10px;
             transition: 1s;
-            position: relative;
-            left: -280px;
+            left: -100%;
+            position: absolute;
+            &.show {
+                left: 0;
+            }
             button {
                 border-radius: var(--radius);
                 border: 0;
@@ -103,6 +107,7 @@
             font-size: 14px;
         }
         .actions {
+            min-width: 61px;
             justify-content: center;
             border-left: var(--dark) 1px dashed;
             margin-left: 10px;
