@@ -9,6 +9,7 @@
     height: calc(100vh - 430px);
     overflow: auto;
     > li {
+        --card-height: 230px;
         position: relative;
         background-color: var(--white);
         border-radius: var(--radius);
@@ -17,14 +18,14 @@
         color: var(--dark);
         /* Roberto */
         overflow: hidden;
-        height: 200px;
+        height: var(--card-height);
         .detail {
             color: #000;
             text-align: left;
             z-index: 445;
             transform: translate(0px, 0px);
             background-color: #50ff0063;
-            height: 200px;
+            height: var(--card-height);
             width: 0px;
             border-radius: 10px 0 0 10px;
             transition: 1s;
@@ -36,9 +37,8 @@
             color: #000;
             text-align: center;
             z-index: 445;
-            // transform: translate(0px, 0px);
             background-color: #ff000063;
-            height: 200px;
+            height: var(--card-height);
             width: 100%;
             justify-content: center;
             align-items: center;

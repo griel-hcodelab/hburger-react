@@ -1,3 +1,4 @@
+import axios from "axios";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import { Order } from "../../../Types/Orders/OrderType";
@@ -6,9 +7,16 @@ import { formatPrice } from "../../../utils/formatPrice";
 export const OrderCard = ({ order } : { order: Order}) => {
   const [showAlert, setShowAlert] = useState(false);
   const [canDeleteOrder, setCanDeleteOrder] = useState(true);
+  const [paymentSituationName, setPaymentSituationName] = useState('');
 
   useEffect(() => {
-    setCanDeleteOrder([1, 2, 3, 4, 5].includes(order.payment_situation_id));
+    axios.get(`payment-situations/${order.payment_situation_id}`, {
+      baseURL: process.env.API_URL,
+    })
+    .then((response) => {
+      setPaymentSituationName(response.data.name);
+      setCanDeleteOrder([1, 2, 3, 4, 5].includes(order.payment_situation_id));
+    });
   }, [order]);
 
   const formatOrderId = (order: Order): string => {
@@ -33,6 +41,10 @@ export const OrderCard = ({ order } : { order: Order}) => {
           <li>
             <span>Data:</span>
             <span>{format(new Date(order.createdAt), 'dd/MM/yyyy')}</span>
+          </li>
+          <li>
+            <span>Status:</span>
+            <span>{paymentSituationName}</span>
           </li>
           <li>
             <span>Valor:</span>
