@@ -10,19 +10,16 @@ import {
 import { AuthContextType } from '../../Types/Auth/AuthContextType';
 import { AuthenticationResponse } from '../../Types/Auth/AuthenticationResponse';
 import { AuthProviderProps } from '../../Types/Auth/AuthProviderProps';
-import { ForgotPasswordFormData } from '../../Types/Auth/ForgotPasswordFormData';
 import { ResetPasswordFormData } from '../../Types/Auth/ResetPasswordFormData';
 import { User } from '../../Types/Auth/User';
 
 const AuthContext = createContext<AuthContextType>({
   initAuth: () => {},
   redirectToNextURL: () => {},
-  onForgotPasswordFormSubmit: () => {},
   onResetPasswordFormSubmit: () => {},
   token: null,
   setToken: () => {},
   user: null,
-  forgotPasswordFormIsLoading: false,
   resetPasswordFormIsLoading: false,
 });
 
@@ -31,8 +28,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const [token, setToken] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [nextURL] = useState('/');
-  const [forgotPasswordFormIsLoading, setForgotPasswordFormIsLoading] =
-    useState(false);
+
   const [resetPasswordFormIsLoading, setResetPasswordFormIsLoading] =
     useState(false);
 
@@ -45,26 +41,6 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     const noAuthRoutes = ['/login', '/register', '/forget', '/reset'];
 
     return !noAuthRoutes.includes(route);
-  };
-
-  const onForgotPasswordFormSubmit = async ({
-    email,
-  }: ForgotPasswordFormData) => {
-    try {
-      setForgotPasswordFormIsLoading(true);
-
-      const { data } = await axios.post(
-        '/login/forget',
-        { email },
-        { baseURL: process.env.API_URL },
-      );
-
-      return data.message;
-    } catch (error) {
-      return 'Não foi possível enviar o e-mail de recuperação de senha.';
-    } finally {
-      setForgotPasswordFormIsLoading(false);
-    }
   };
 
   const onResetPasswordFormSubmit = async ({
@@ -109,14 +85,12 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   return (
     <AuthContext.Provider
       value={{
-        onForgotPasswordFormSubmit,
         onResetPasswordFormSubmit,
         initAuth,
         redirectToNextURL,
         token,
         setToken,
         user,
-        forgotPasswordFormIsLoading,
         resetPasswordFormIsLoading,
       }}
     >
