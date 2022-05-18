@@ -10,17 +10,14 @@ import {
 import { AuthContextType } from '../../Types/Auth/AuthContextType';
 import { AuthenticationResponse } from '../../Types/Auth/AuthenticationResponse';
 import { AuthProviderProps } from '../../Types/Auth/AuthProviderProps';
-import { ResetPasswordFormData } from '../../Types/Auth/ResetPasswordFormData';
 import { User } from '../../Types/Auth/User';
 
 const AuthContext = createContext<AuthContextType>({
   initAuth: () => {},
   redirectToNextURL: () => {},
-  onResetPasswordFormSubmit: () => {},
   token: null,
   setToken: () => {},
   user: null,
-  resetPasswordFormIsLoading: false,
 });
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
@@ -28,9 +25,6 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const [token, setToken] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [nextURL] = useState('/');
-
-  const [resetPasswordFormIsLoading, setResetPasswordFormIsLoading] =
-    useState(false);
 
   const redirectToNextURL = useCallback(
     () => router.push(nextURL),
@@ -41,27 +35,6 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     const noAuthRoutes = ['/login', '/register', '/forget', '/reset'];
 
     return !noAuthRoutes.includes(route);
-  };
-
-  const onResetPasswordFormSubmit = async ({
-    password,
-  }: ResetPasswordFormData) => {
-    try {
-      setResetPasswordFormIsLoading(true);
-
-      await axios.post(
-        `/login/reset?token=${router.query.token}`,
-        { password },
-        { baseURL: process.env.API_URL },
-      );
-
-      alert('Senha alterada com sucesso!');
-      router.push('/login');
-    } catch (error) {
-      alert('Não foi possível recuperar a senha.');
-    } finally {
-      setForgotPasswordFormIsLoading(false);
-    }
   };
 
   const initAuth = () => {
@@ -85,13 +58,11 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   return (
     <AuthContext.Provider
       value={{
-        onResetPasswordFormSubmit,
         initAuth,
         redirectToNextURL,
         token,
         setToken,
         user,
-        resetPasswordFormIsLoading,
       }}
     >
       {children}
