@@ -38,7 +38,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             })
         }
 
-        const response = await axios.post<BurguerCreate>(`/orders`, data, {
+        const response = await axios.patch<BurguerCreate>(`/orders/${data.id}`, data, {
             baseURL: process.env.API_URL,
             headers: {
                 'Authorization': `Bearer ${req.session.token}`

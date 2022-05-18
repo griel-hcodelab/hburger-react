@@ -48,7 +48,7 @@ type ComponentPageProps = {
     amount: string
 }
 
-const ComponentPage: NextPage<ComponentPageProps> = ({amount = '1000'}) => {
+const ComponentPage: NextPage<ComponentPageProps> = ({ amount = '1000' }) => {
     const router = useRouter();
 
     const {
@@ -87,7 +87,7 @@ const ComponentPage: NextPage<ComponentPageProps> = ({amount = '1000'}) => {
         if (process.env.NODE_ENV === 'development') {
             if (mp) {
                 setValue('number', '4235647728025682');
-                setValue('name', 'APRO');
+                setValue('name', 'SECU');
                 setValue('expiry', format(addMonths(new Date(), 1), 'MM/yyyy'));
                 setValue('cvv', '123');
                 setValue('cardDocument', '12345678909');
@@ -162,8 +162,10 @@ const ComponentPage: NextPage<ComponentPageProps> = ({amount = '1000'}) => {
     }, [])
 
     const createPayment = (data: BurguerCreate) => {
-        axios.post('/api/payment', data).then(() => {
-            router.push(`/orders`)
+        axios.patch('/api/payment', data).then(() => {
+            //router.push(`/`)
+            console.log(data);
+
         }).catch((error) => {
             setError('server', {
                 message: error.message
@@ -172,6 +174,9 @@ const ComponentPage: NextPage<ComponentPageProps> = ({amount = '1000'}) => {
     }
 
     const onSubmit: SubmitHandler<FormData> = (data) => {
+
+
+
 
         const expirtyMonth = Number(expiry.split('/')[0]);
         const expirtyYear = Number(expiry.split('/')[1]);
@@ -221,7 +226,6 @@ const ComponentPage: NextPage<ComponentPageProps> = ({amount = '1000'}) => {
             identificationType: cardDocument.length === 11 ? 'CPF' : 'CNPJ',
             identificationNumber: cardDocument,
         }).then((response: any) => {
-
             createPayment({
                 cardToken: response.id,
                 document: cardDocument,
@@ -229,12 +233,25 @@ const ComponentPage: NextPage<ComponentPageProps> = ({amount = '1000'}) => {
                 paymentMethod: paymentMethodId,
             })
 
+
         }).catch((error: any) => {
             setError('token', {
                 message: error.message
             });
 
         })
+
+        
+       
+
+        // mp.payment.save(req.body)
+        // .then(function (response) {
+        //     const { status, status_detail, id } = response.body;
+        //     res.status(response.status).json({ status, status_detail, id });
+        // })
+        // .catch(function (error) {
+        //     console.error(error);
+        // });
 
     }
 
