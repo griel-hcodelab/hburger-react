@@ -1,26 +1,20 @@
+import LogoRed from '../../assets/images/logo-icon-red.svg';
+import LogoTextRed from '../../assets/images/logo-text-red.svg';
+
+import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 
-export const Header = () => {
-    
+
+export const Header = () => {  
     const [ open, setIsOpen ] = useState(false);
-
-
 
     return (
         <header>
             <Link href="/">
                 <a>
-                    <img 
-                        src="/images/logo-icon-red.svg" 
-                        alt="Logo Icone" 
-                        id="logo-icon" 
-                    />
-                    <img 
-                        src="/images/logo-text-red.svg" 
-                        alt="Logo Texto" 
-                        id="logo-text" 
-                    />
+                    <Image src={LogoRed} alt="Logo Icone" id="logo-icon" />
+                    <Image src={LogoTextRed} alt="Logo Texto" id="logo-text" />
                 </a>
             </Link>
             <div className={["profileMenu", open ? "show" : ""].join(" ")}>

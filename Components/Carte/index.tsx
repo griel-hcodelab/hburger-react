@@ -21,12 +21,6 @@ type selectedBurger = {
 	price: number;
 }
 
-/**
- * @todo: salvar lanche, voltar pra fazer outro
- * @todo: adicionar ingredientes na bandeja somente após salvar o lanche
- * 
- */
-
 const CarteComponent = () => {
 
 	const [burgers, setBurgers] = useState<Burgers[]>([]);
@@ -125,15 +119,12 @@ const CarteComponent = () => {
 							{ingredientType.length === 0 ? <Loading /> : ''}
 
 							{ingredientType &&
-								ingredientType.map(({ id, name, description }, index) => (
-									<>
-										<H3 key={index}>{name} <p>{description}</p></H3>
+								ingredientType.map(({ id, name, description }) => (
+									<Fragment key={id}>
+										<H3>{name} <p>{description}</p></H3>
 
 										<Aditionals id={id} />
-
-									</>
-
-
+									</Fragment>
 								))
 							}
 
@@ -155,8 +146,6 @@ const CarteComponent = () => {
 
 export default function Carte() {
 	return (
-
-		<CarteComponent key={Math.floor(Math.random() * 100)} />
-
+		<CarteComponent />
 	)
 }

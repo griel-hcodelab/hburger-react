@@ -1,6 +1,6 @@
 @use 'components';
 
-#app {
+#__next {
     section {
         main {
             section {
@@ -15,6 +15,11 @@
                                 @include components.success;
                                 display: none;    
                             }
+                        }
+                    }
+                    select{
+                        option {
+                            color: #202626;
                         }
                     }
                 }
