@@ -4,11 +4,16 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import AuthLayout from '../Components/Auth/Layout';
+import { Toast } from '../Components/Toast';
 import { useAuth } from '../Context/AuthContext';
 import { LoginFormData } from '../Types/Auth/LoginFormData';
 
 const PageComponent: NextPage = () => {
   const [formIsLoading, setFormIsLoading] = useState(false);
+  const [toastType, setToastType] = useState<'success' | 'danger'>('danger');
+  const [toastIsOpen, setToastIsOpen] = useState(false);
+  const [error, setError] = useState('');
+
   const { register, handleSubmit } = useForm<LoginFormData>();
   const { initAuth, redirectToNextURL } = useAuth();
 
@@ -21,10 +26,20 @@ const PageComponent: NextPage = () => {
       initAuth();
       redirectToNextURL();
     } catch (error: any) {
-      alert(error.response.data.message);
+      showErrorToast(error.response.data.message);
     } finally {
       setFormIsLoading(false);
     }
+  };
+
+  const showErrorToast = (message: string) => {
+    setError(message);
+    setToastType('danger');
+    setToastIsOpen(true);
+
+    setTimeout(() => {
+      setToastIsOpen(false);
+    }, 3000);
   };
 
   return (
@@ -54,6 +69,10 @@ const PageComponent: NextPage = () => {
             {formIsLoading ? 'Enviando' : 'Enviar'}
           </button>
         </footer>
+
+        <Toast type={toastType} open={toastIsOpen}>
+          <p>{error}</p>
+        </Toast>
       </form>
     </AuthLayout>
   );
