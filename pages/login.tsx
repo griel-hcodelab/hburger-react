@@ -1,20 +1,37 @@
+import axios from 'axios';
 import { NextPage } from 'next';
 import Link from 'next/link';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import AuthLayout from '../Components/Auth/Layout';
 import { useAuth } from '../Context/AuthContext';
 import { LoginFormData } from '../Types/Auth/LoginFormData';
 
 const PageComponent: NextPage = () => {
+  const [formIsLoading, setFormIsLoading] = useState(false);
   const { register, handleSubmit } = useForm<LoginFormData>();
+  const { initAuth, redirectToNextURL } = useAuth();
 
-  const { onLoginFormSubmit, loginFormIsLoading } = useAuth();
+  const onFormSubmit = async (formData: LoginFormData) => {
+    try {
+      setFormIsLoading(true);
+
+      await axios.post(`/api/login`, formData);
+
+      initAuth();
+      redirectToNextURL();
+    } catch (error: any) {
+      alert(error.response.data.message);
+    } finally {
+      setFormIsLoading(false);
+    }
+  };
 
   return (
     <AuthLayout>
       <form
         id="form-login"
-        onSubmit={handleSubmit<LoginFormData>(onLoginFormSubmit)}
+        onSubmit={handleSubmit<LoginFormData>(onFormSubmit)}
       >
         <input
           type="email"
@@ -33,8 +50,8 @@ const PageComponent: NextPage = () => {
           <Link href="/forget">
             <a>Esqueceu a senha?</a>
           </Link>
-          <button type="submit" disabled={loginFormIsLoading}>
-            {loginFormIsLoading ? 'Enviando' : 'Enviar'}
+          <button type="submit" disabled={formIsLoading}>
+            {formIsLoading ? 'Enviando' : 'Enviar'}
           </button>
         </footer>
       </form>
