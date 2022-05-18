@@ -4,10 +4,15 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import AuthLayout from '../Components/Auth/Layout';
+import { Toast } from '../Components/Toast';
 import { ResetPasswordFormData } from '../Types/Auth/ResetPasswordFormData';
 
 const PageComponent: NextPage = () => {
   const [formIsLoading, setFormIsLoading] = useState(false);
+  const [toastType, setToastType] = useState<'success' | 'danger'>('danger');
+  const [toastIsOpen, setToastIsOpen] = useState(false);
+  const [message, setMessage] = useState('');
+
   const router = useRouter();
   const { register, handleSubmit } = useForm<ResetPasswordFormData>();
 
@@ -21,13 +26,23 @@ const PageComponent: NextPage = () => {
         { baseURL: process.env.API_URL },
       );
 
-      alert('Senha alterada com sucesso!');
+      showToast('Senha alterada com sucesso!', 'success');
       router.push('/login');
     } catch (error) {
-      alert('Não foi possível recuperar a senha.');
+      showToast('Não foi possível recuperar a senha.', 'danger');
     } finally {
       setFormIsLoading(false);
     }
+  };
+
+  const showToast = (message: string, type: 'success' | 'danger') => {
+    setMessage(message);
+    setToastType(type);
+    setToastIsOpen(true);
+
+    setTimeout(() => {
+      setToastIsOpen(false);
+    }, 3000);
   };
 
   return (
@@ -45,6 +60,10 @@ const PageComponent: NextPage = () => {
             {formIsLoading ? 'Enviando' : 'Enviar'}
           </button>
         </footer>
+
+        <Toast type={toastType} open={toastIsOpen}>
+          <p>{message}</p>
+        </Toast>
       </form>
     </AuthLayout>
   );
