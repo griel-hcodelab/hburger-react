@@ -70,7 +70,7 @@ export const Aside = () => {
                             </div>
                             <div className={styles.aditionals}>
                                 <ul>
-                                     <li><strong>Lanche</strong>{formatPrice(item.burger.price)}</li>
+                                     <li><strong>Lanche</strong>{formatPrice(item.burger?.price)}</li>
                                     {item.aditional?.map((aditionals: TrayItemsTypes) => (
                                         <li key={aditionals.id}>
                                             <span>{aditionals.name}</span>
