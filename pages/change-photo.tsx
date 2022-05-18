@@ -4,19 +4,26 @@ import { Header } from "../Components/Header";
 import React, { useCallback, useRef, useState } from "react";
 import Cropper from "react-cropper";
 import "cropperjs/dist/cropper.css";
+import { useAuth } from "../Context/AuthContext";
+import { User } from "../Types/Auth/User";
+import axios from "axios";
+import { MeResponse } from "../Types/Auth/MeResponse";
+import { redirectToAuth } from "../utils/redirectToAuth";
+import { withAuthentication } from "../utils/withAuthentication";
 
-const ComponentPage: NextPage = () => {
+type ComponentPageProps = {
+    token: string;
+    user: User;
+}
+
+const ComponentPage: NextPage<ComponentPageProps> = () => {
 
     const cropperRef = useRef<HTMLImageElement>(null);
     const imageRef = useRef<HTMLImageElement>(null);
 
-    const onCrop = () => {
-        const imageElement: any = cropperRef?.current;
-        const cropper: any = imageElement?.cropper;
-        console.log(cropper.getCroppedCanvas().toDataURL());
-    };
-
     const [photo, setPhoto] = useState('');
+    const [error, setError] = useState('');
+    const { user: stateUser, setUser } = useAuth();
 
     const onSubmit = useCallback((e: React.FormEvent<HTMLFormElement>) => {
 
@@ -26,7 +33,7 @@ const ComponentPage: NextPage = () => {
         const cropper = imgElement?.cropper;
 
         if (!cropper) {
-            console.log('Selecione uma foto.');
+            setError('Selecione uma foto.');
             return false;
         }
 
@@ -40,39 +47,48 @@ const ComponentPage: NextPage = () => {
 
             formData.append('file', blob, 'photo.png');
 
+            axios.put<User>(`/login/photo`, formData, {
+                baseURL: process.env.API_URL,
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                }
+            }).then(({ data: { photo } }) => {
+                user.photo = photo;
+                setUser({
+                    ...stateUser!,
+                    photo,
+                });
+                setPhoto('');
+                console.log('Envio ok');
+                setTimeout(() => {
+                    console.log('Tirar toast')
+                }, 3000);
+            }).catch((e) => {
+                setError(e.message);
+                console.log(e.message);
+            });
         });
 
 
-    }, [imageRef]);
+    }, [token, imageRef]);
 
 
     const onChangeFile = (event: any) => {
-
         const { files } = event.target as HTMLInputElement;
-
         if (files && files.length) {
-
             const reader = new FileReader();
-
             reader.onload = () => {
                 setPhoto(String(reader.result));
             }
-
             reader.readAsDataURL(files[0]);
-
         }
-
     }
 
     const onSelectFile = () => {
-
         const inputFile = document.createElement('input');
         inputFile.type = 'file';
-
         inputFile.addEventListener('change', onChangeFile);
-
         inputFile.click();
-
     }
 
     return (
@@ -82,23 +98,29 @@ const ComponentPage: NextPage = () => {
                     <Header />
                     <main>
                         <form onSubmit={onSubmit}>
-                            <Cropper
-                                src="https://raw.githubusercontent.com/roadmanfong/react-cropper/master/example/img/child.jpg"
-                                style={{ height: 400, width: "100%" }}
-                                // Cropper.js options
-                                initialAspectRatio={4 / 4}
-                                guides={true}
-                                crop={onCrop}
+                            
+                            {photo && <Cropper
+                                src={photo}
+                                style={{ height: 400, width: '100%' }}
+                                aspectRatio={1}
+                                guides={false}
                                 ref={cropperRef}
-                                />
-                            <img src="/images/default.png" alt="Foto Atual" id="photo-preview" />
+                            />}
+
+                            {!photo && <img
+                                src={`${process.env.API_URL}/photo/${user?.photo}`}
+                                alt="Foto Atual"
+                                id="photo-preview"
+                                onClick={onSelectFile}
+                                ref={imageRef}
+                            />}
 
                             <input type="file" name="photo" id="file" />
-
-                            <input type="hidden" name="x" />
-                            <input type="hidden" name="y" />
-                            <input type="hidden" name="width" />
-                            <input type="hidden" name="height" />
+                            
+                            <button type="button" onClick={onSelectFile} className="choose-photo">
+                                {!photo && 'Procurar Foto'}
+                                {photo && 'Procurar outra Foto'}
+                            </button>
 
                             <button type="button" className="choose-photo">Escolher Foto</button>
 
@@ -121,3 +143,26 @@ const ComponentPage: NextPage = () => {
 }
 
 export default ComponentPage;
+
+export const getServerSideProps = withAuthentication(async (context) => {
+
+    try {
+
+        const { token } = context.req.session;
+
+        const { data: { user } } = await axios.get<MeResponse>('/auth/me', {
+            baseURL: process.env.API_URL,
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+
+        return {
+            props: { token, user }
+        }
+
+    } catch (e) {
+        return redirectToAuth(context);
+    }
+
+});
