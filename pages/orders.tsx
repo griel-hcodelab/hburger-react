@@ -24,14 +24,16 @@ const Orders: NextPage = () => {
   return (
     <>
       <MetaTitle title="Seus Pedidos :: HBurger" />
-      {/* <Header /> */}
-      <main>
-        <Title text={<h1>Meus Pedidos</h1>} />
-        <Button tag="a" href="/" value="QUER MAIS UM H-BURGER?" />
-        <ul id="list-orders">
-          {orders.map((order) => <OrderCard key={order.id} order={order} onCancel={getOrders} />)}
-        </ul>
-      </main>
+      <section>
+        <Header />
+        <main>
+          <Title text={<h1>Meus Pedidos</h1>} />
+          <Button tag="a" href="/" value="QUER MAIS UM H-BURGER?" />
+          <ul id="list-orders">
+            {orders.map((order) => <OrderCard key={order.id} order={order} onCancel={getOrders} />)}
+          </ul>
+        </main>
+      </section>
     </>
   );
 };
