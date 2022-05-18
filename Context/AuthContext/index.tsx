@@ -11,19 +11,17 @@ import { AuthContextType } from '../../Types/Auth/AuthContextType';
 import { AuthenticationResponse } from '../../Types/Auth/AuthenticationResponse';
 import { AuthProviderProps } from '../../Types/Auth/AuthProviderProps';
 import { ForgotPasswordFormData } from '../../Types/Auth/ForgotPasswordFormData';
-import { RegisterFormData } from '../../Types/Auth/RegisterFormData';
 import { ResetPasswordFormData } from '../../Types/Auth/ResetPasswordFormData';
 import { User } from '../../Types/Auth/User';
 
 const AuthContext = createContext<AuthContextType>({
-  onRegisterFormSubmit: () => {},
   initAuth: () => {},
   redirectToNextURL: () => {},
   onForgotPasswordFormSubmit: () => {},
   onResetPasswordFormSubmit: () => {},
   token: null,
+  setToken: () => {},
   user: null,
-  registerFormIsLoading: false,
   forgotPasswordFormIsLoading: false,
   resetPasswordFormIsLoading: false,
 });
@@ -33,7 +31,6 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const [token, setToken] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [nextURL] = useState('/');
-  const [registerFormIsLoading, setRegisterFormIsLoading] = useState(false);
   const [forgotPasswordFormIsLoading, setForgotPasswordFormIsLoading] =
     useState(false);
   const [resetPasswordFormIsLoading, setResetPasswordFormIsLoading] =
@@ -48,26 +45,6 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     const noAuthRoutes = ['/login', '/register', '/forget', '/reset'];
 
     return !noAuthRoutes.includes(route);
-  };
-
-  const onRegisterFormSubmit = async (formData: RegisterFormData) => {
-    try {
-      setRegisterFormIsLoading(true);
-
-      const { data } = await axios.post('/api/register', {
-        name: formData.name,
-        email: formData.email,
-        phone: formData.phone,
-        password: formData.password,
-      });
-
-      setToken(data.token);
-      redirectToNextURL();
-    } catch (error: any) {
-      alert(error.response.data.message);
-    } finally {
-      setRegisterFormIsLoading(false);
-    }
   };
 
   const onForgotPasswordFormSubmit = async ({
@@ -132,14 +109,13 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   return (
     <AuthContext.Provider
       value={{
-        onRegisterFormSubmit,
         onForgotPasswordFormSubmit,
         onResetPasswordFormSubmit,
         initAuth,
         redirectToNextURL,
         token,
+        setToken,
         user,
-        registerFormIsLoading,
         forgotPasswordFormIsLoading,
         resetPasswordFormIsLoading,
       }}
