@@ -19,11 +19,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             aditions_itens.push(item.aditional.map(({ id }: { id: number }) => +id).join(','));
         });
 
-
-        // console.log(products.join())
-        // console.log(aditions_itens.join('|'))
-
-
         const form:any = {
             products: products.join(),
             aditions_itens: aditions_itens.join('|')
@@ -34,18 +29,19 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             formData.append(key, form[key])
         })
 
-
-
         await axios.post('/orders', form, {
             baseURL: process.env.API_URL,
             headers: {
                 'Authorization': `Bearer ${req.session.token}`
             }
-        });
-
-
-
-        res.status(200);
+        })
+        .then(()=>{
+            res.status(200);
+        })
+        .catch((e:any)=>{
+            res.status(e.response.status);
+        })
+        ;
 
 
     } catch (e: any) {
