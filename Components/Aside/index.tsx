@@ -27,8 +27,6 @@ export const Aside = () => {
     }, [trayItems])
 
 
-        console.log(trayBurger)
-
     const createOrder = async () => {
 
         setLoading(true)
@@ -40,7 +38,6 @@ export const Aside = () => {
             router.push("/payment")
         })
         .catch((e:any)=>{
-            console.log(e)
             setLoading(false)
         })
 
