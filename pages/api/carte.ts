@@ -1,12 +1,52 @@
-import { withIronSessionApiRoute } from "iron-session/next/dist";
+import axios from "axios";
+import FormData from 'form-data';
+import { withIronSessionApiRoute } from "iron-session/next";
 import { NextApiRequest, NextApiResponse } from "next";
 import { sessionOptions } from "../../utils/session";
 
-export default withIronSessionApiRoute(async function (req: NextApiRequest, res: NextApiResponse) {
-
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     try {
 
-        console.log(req.body.order)
+        const { data } = req.body;
+
+        const json = JSON.parse(data);
+
+        const products: string[] = [];
+        const aditions_itens: number[] = [];
+
+        json.forEach((item: any) => {
+            products.push(item.burger.id)
+            aditions_itens.push(item.aditional.map(({ id }: { id: number }) => +id).join(','));
+        });
+
+
+        // console.log(products.join())
+        // console.log(aditions_itens.join('|'))
+
+
+        const form:any = {
+            products: products.join(),
+            aditions_itens: aditions_itens.join('|')
+        }
+
+        const formData = new FormData()
+        Object.keys(form).forEach((key) => {
+            formData.append(key, form[key])
+        })
+
+
+
+        await axios.post('/orders', form, {
+            baseURL: process.env.API_URL,
+            headers: {
+                'Authorization': `Bearer ${req.session.token}`
+            }
+        });
+
+
+
+        res.status(200);
+
 
     } catch (e: any) {
 
@@ -15,5 +55,7 @@ export default withIronSessionApiRoute(async function (req: NextApiRequest, res:
         });
 
     }
+};
 
-}, sessionOptions)
+
+export default withIronSessionApiRoute(handler, sessionOptions);
