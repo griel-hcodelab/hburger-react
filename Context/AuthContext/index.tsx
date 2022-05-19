@@ -18,6 +18,7 @@ const AuthContext = createContext<AuthContextType>({
   token: null,
   setToken: () => {},
   user: null,
+  setUser: () => {},
 });
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
@@ -63,6 +64,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         token,
         setToken,
         user,
+        setUser,
       }}
     >
       {children}

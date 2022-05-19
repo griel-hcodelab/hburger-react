@@ -1,5 +1,4 @@
 import { NextPage } from "next";
-import { Fragment } from "react";
 import { Header } from "../Components/Header";
 import React, { useCallback, useRef, useState } from "react";
 import Cropper from "react-cropper";
@@ -7,6 +6,8 @@ import "cropperjs/dist/cropper.css";
 import { useAuth } from "../Context/AuthContext";
 import { User } from "../Types/Auth/User";
 import axios from "axios";
+import { MetaTitle } from "../Components/Header/MetaTitle";
+import { Toast } from "../Components/Toast";
 import { MeResponse } from "../Types/Auth/MeResponse";
 import { redirectToAuth } from "../utils/redirectToAuth";
 import { withAuthentication } from "../utils/withAuthentication";
@@ -16,14 +17,18 @@ type ComponentPageProps = {
     user: User;
 }
 
-const ComponentPage: NextPage<ComponentPageProps> = () => {
+const ComponentPage: NextPage<ComponentPageProps> = ({ token, user }) => {
+    console.log(token);
 
     const cropperRef = useRef<HTMLImageElement>(null);
     const imageRef = useRef<HTMLImageElement>(null);
 
+    const [toastType, setToastType] = useState<'success' | 'danger'>('danger');
+    const [toastOpen, setToastOpen] = useState(false);
     const [photo, setPhoto] = useState('');
     const [error, setError] = useState('');
     const { user: stateUser, setUser } = useAuth();
+    const photoAtual = user.photo;
 
     const onSubmit = useCallback((e: React.FormEvent<HTMLFormElement>) => {
 
@@ -36,17 +41,13 @@ const ComponentPage: NextPage<ComponentPageProps> = () => {
             setError('Selecione uma foto.');
             return false;
         }
-
         if (imageRef?.current) {
             imageRef.current.src = cropper.getCroppedCanvas().toDataURL();
         }
 
         cropper.getCroppedCanvas().toBlob((blob: Blob) => {
-
             const formData = new FormData();
-
             formData.append('file', blob, 'photo.png');
-
             axios.put<User>(`/login/photo`, formData, {
                 baseURL: process.env.API_URL,
                 headers: {
@@ -59,19 +60,18 @@ const ComponentPage: NextPage<ComponentPageProps> = () => {
                     photo,
                 });
                 setPhoto('');
-                console.log('Envio ok');
+                setToastType('success');
+                setToastOpen(true);
                 setTimeout(() => {
-                    console.log('Tirar toast')
+                    setToastOpen(false);
                 }, 3000);
             }).catch((e) => {
-                setError(e.message);
-                console.log(e.message);
+                setToastType('danger');
+                setError(e.messge);
+                setToastOpen(true);
             });
         });
-
-
     }, [token, imageRef]);
-
 
     const onChangeFile = (event: any) => {
         const { files } = event.target as HTMLInputElement;
@@ -92,12 +92,12 @@ const ComponentPage: NextPage<ComponentPageProps> = () => {
     }
 
     return (
-        <Fragment>
-            <div id="app">
+        <>
+            <MetaTitle title="Mude sua Foto :: HBurger" />
                 <section>
                     <Header />
                     <main>
-                        <form onSubmit={onSubmit}>
+                        <form onSubmit={onSubmit} id="change-photo">
                             
                             {photo && <Cropper
                                 src={photo}
@@ -108,21 +108,25 @@ const ComponentPage: NextPage<ComponentPageProps> = () => {
                             />}
 
                             {!photo && <img
-                                src={`${process.env.API_URL}/photo/${user?.photo}`}
+                                src={photoAtual}
                                 alt="Foto Atual"
                                 id="photo-preview"
                                 onClick={onSelectFile}
                                 ref={imageRef}
                             />}
-
-                            <input type="file" name="photo" id="file" />
                             
                             <button type="button" onClick={onSelectFile} className="choose-photo">
                                 {!photo && 'Procurar Foto'}
                                 {photo && 'Procurar outra Foto'}
                             </button>
 
-                            <button type="button" className="choose-photo">Escolher Foto</button>
+                            <Toast
+                                type={toastType}
+                                open={toastOpen}
+                            >
+                                {error && toastType === 'danger' && <p>{error}</p>}
+                                {!error && toastType === 'success' && <p>Foto atualziada com sucesso!</p>}
+                            </Toast>
 
                             <div className="toast success">
                                 <div id="alert"></div>
@@ -137,8 +141,7 @@ const ComponentPage: NextPage<ComponentPageProps> = () => {
                         </form>
                     </main>
                 </section>
-            </div>
-        </Fragment>
+        </>
     );
 }
 
@@ -150,7 +153,7 @@ export const getServerSideProps = withAuthentication(async (context) => {
 
         const { token } = context.req.session;
 
-        const { data: { user } } = await axios.get<MeResponse>('/auth/me', {
+        const { data: user } = await axios.get<MeResponse>('/login/photo', {
             baseURL: process.env.API_URL,
             headers: {
                 Authorization: `Bearer ${token}`,

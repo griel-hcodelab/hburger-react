@@ -21,7 +21,7 @@ export const Header = () => {
                 <Link href="/profile">
                     <a>Alterar Dados</a>
                 </Link>
-                <Link href="/orders-list">
+                <Link href="/orders">
                     <a>Seus Pedidos</a>
                 </Link>
                 <Link href="/change-photo">

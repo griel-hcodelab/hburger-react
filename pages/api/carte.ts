@@ -2,6 +2,7 @@ import axios from "axios";
 import FormData from 'form-data';
 import { withIronSessionApiRoute } from "iron-session/next";
 import { NextApiRequest, NextApiResponse } from "next";
+import { CarteType } from "../../Types/CarteType";
 import { sessionOptions } from "../../utils/session";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -43,7 +44,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 address: data.address_id,
                 total: data.total,
                 obervation: data.observation,
-            } 
+            } as CarteType
 
             req.session.order = result;
 

@@ -83,8 +83,6 @@ const CarteComponent = () => {
 
 	}, []);
 
-
-
 	return (
 		<>
 
