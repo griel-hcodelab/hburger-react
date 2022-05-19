@@ -43,7 +43,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
                 address: data.address_id,
                 total: data.total,
                 obervation: data.observation,
-            }
+            } 
 
             req.session.order = result;
 

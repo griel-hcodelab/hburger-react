@@ -20,6 +20,7 @@ type BurguerCreate = {
     document: string;
 }
 
+
 type FormData = {
     number: string;
     name: string;
@@ -41,10 +42,6 @@ type InstallmentOptions = {
     number: number;
     value: number;
     description: string;
-}
-
-type orderValue = {
-
 }
 
 declare var MercadoPago: any;
@@ -166,7 +163,7 @@ const ComponentPage: NextPage<ComponentPageProps> = ({ amount = '1000' }) => {
         document.body.appendChild(script)
     }, [])
 
-    const createPayment = (data: BurguerCreate) => {
+    const createPayment = (data: Order) => {
         axios.patch('/api/payment', data).then(() => {
             //router.push(`/`)
             console.log(data);
@@ -180,7 +177,7 @@ const ComponentPage: NextPage<ComponentPageProps> = ({ amount = '1000' }) => {
 
     const onSubmit: SubmitHandler<FormData> = (data) => {
 
-
+        console.log(data)
 
 
         const expirtyMonth = Number(expiry.split('/')[0]);
