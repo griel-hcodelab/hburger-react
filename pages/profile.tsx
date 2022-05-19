@@ -4,11 +4,12 @@ import { Header } from "../Components/Header";
 import React, { useCallback, useRef, useState } from "react";
 import Cropper from "react-cropper";
 import "cropperjs/dist/cropper.css";
+import { MetaTitle } from "../Components/Header/MetaTitle";
 
 const ComponentPage: NextPage = () => {
     return (
-        <Fragment>
-            <div id="app">
+        <>
+            <MetaTitle title="Meus Dados :: HBurger" />
                 <section>
                     <Header />
                     <main>
@@ -90,8 +91,7 @@ const ComponentPage: NextPage = () => {
 
                     </main>
                 </section>
-            </div>
-        </Fragment>
+        </>
     );
 }
 
