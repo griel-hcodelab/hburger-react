@@ -11,7 +11,7 @@ import { LoginFormData } from '../Types/Auth/LoginFormData';
 const PageComponent: NextPage = () => {
   const [formIsLoading, setFormIsLoading] = useState(false);
   const [toastType, setToastType] = useState<'success' | 'danger'>('danger');
-  const [toastIsOpen, setToastIsOpen] = useState(false);
+  const [toastIsOpen, setToastIsOpen] = useState(true);
   const [error, setError] = useState('');
 
   const { register, handleSubmit } = useForm<LoginFormData>();
@@ -69,11 +69,10 @@ const PageComponent: NextPage = () => {
             {formIsLoading ? 'Enviando' : 'Enviar'}
           </button>
         </footer>
-
-        <Toast type={toastType} open={toastIsOpen}>
-          <p>{error}</p>
-        </Toast>
       </form>
+      <Toast type={toastType} open={toastIsOpen}>
+        <p>{error}</p>
+      </Toast>
     </AuthLayout>
   );
 };
