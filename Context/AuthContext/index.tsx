@@ -10,23 +10,14 @@ import {
 import { AuthContextType } from '../../Types/Auth/AuthContextType';
 import { AuthenticationResponse } from '../../Types/Auth/AuthenticationResponse';
 import { AuthProviderProps } from '../../Types/Auth/AuthProviderProps';
-import { ForgotPasswordFormData } from '../../Types/Auth/ForgotPasswordFormData';
-import { LoginFormData } from '../../Types/Auth/LoginFormData';
-import { RegisterFormData } from '../../Types/Auth/RegisterFormData';
-import { ResetPasswordFormData } from '../../Types/Auth/ResetPasswordFormData';
 import { User } from '../../Types/Auth/User';
 
 const AuthContext = createContext<AuthContextType>({
-  onRegisterFormSubmit: () => {},
-  onLoginFormSubmit: () => {},
-  onForgotPasswordFormSubmit: () => {},
-  onResetPasswordFormSubmit: () => {},
+  initAuth: () => {},
+  redirectToNextURL: () => {},
   token: null,
+  setToken: () => {},
   user: null,
-  loginFormIsLoading: false,
-  registerFormIsLoading: false,
-  forgotPasswordFormIsLoading: false,
-  resetPasswordFormIsLoading: false,
 });
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
@@ -34,12 +25,6 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const [token, setToken] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [nextURL] = useState('/');
-  const [loginFormIsLoading, setloginFormIsLoading] = useState(false);
-  const [registerFormIsLoading, setRegisterFormIsLoading] = useState(false);
-  const [forgotPasswordFormIsLoading, setForgotPasswordFormIsLoading] =
-    useState(false);
-  const [resetPasswordFormIsLoading, setResetPasswordFormIsLoading] =
-    useState(false);
 
   const redirectToNextURL = useCallback(
     () => router.push(nextURL),
@@ -50,82 +35,6 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     const noAuthRoutes = ['/login', '/register', '/forget', '/reset'];
 
     return !noAuthRoutes.includes(route);
-  };
-
-  const onRegisterFormSubmit = async (formData: RegisterFormData) => {
-    try {
-      setRegisterFormIsLoading(true);
-
-      const { data } = await axios.post('/api/register', {
-        name: formData.name,
-        email: formData.email,
-        phone: formData.phone,
-        password: formData.password,
-      });
-
-      setToken(data.token);
-      redirectToNextURL();
-    } catch (error: any) {
-      alert(error.response.data.message);
-    } finally {
-      setRegisterFormIsLoading(false);
-    }
-  };
-
-  const onLoginFormSubmit = async (formData: LoginFormData) => {
-    try {
-      setloginFormIsLoading(true);
-
-      await axios.post(`/api/login`, formData);
-
-      initAuth();
-      redirectToNextURL();
-    } catch (error: any) {
-      alert(error.response.data.message);
-    } finally {
-      setloginFormIsLoading(false);
-    }
-  };
-
-  const onForgotPasswordFormSubmit = async ({
-    email,
-  }: ForgotPasswordFormData) => {
-    try {
-      setForgotPasswordFormIsLoading(true);
-
-      const { data } = await axios.post(
-        '/login/forget',
-        { email },
-        { baseURL: process.env.API_URL },
-      );
-
-      return data.message;
-    } catch (error) {
-      return 'Não foi possível enviar o e-mail de recuperação de senha.';
-    } finally {
-      setForgotPasswordFormIsLoading(false);
-    }
-  };
-
-  const onResetPasswordFormSubmit = async ({
-    password,
-  }: ResetPasswordFormData) => {
-    try {
-      setResetPasswordFormIsLoading(true);
-
-      await axios.post(
-        `/login/reset?token=${router.query.token}`,
-        { password },
-        { baseURL: process.env.API_URL },
-      );
-
-      alert('Senha alterada com sucesso!');
-      router.push('/login');
-    } catch (error) {
-      alert('Não foi possível recuperar a senha.');
-    } finally {
-      setForgotPasswordFormIsLoading(false);
-    }
   };
 
   const initAuth = () => {
@@ -149,16 +58,11 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   return (
     <AuthContext.Provider
       value={{
-        onRegisterFormSubmit,
-        onLoginFormSubmit,
-        onForgotPasswordFormSubmit,
-        onResetPasswordFormSubmit,
+        initAuth,
+        redirectToNextURL,
         token,
+        setToken,
         user,
-        loginFormIsLoading,
-        registerFormIsLoading,
-        forgotPasswordFormIsLoading,
-        resetPasswordFormIsLoading,
       }}
     >
       {children}

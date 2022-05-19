@@ -4,6 +4,7 @@
 #auth {
     background-color: colors.$bgLogin;
     background-image: url("/images/bg.svg");
+    width: 100%;
     height: 100vh;
     header {
         @include components.header;
