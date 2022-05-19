@@ -6,4 +6,5 @@ export type AuthContextType = {
   token: string | null;
   setToken: (token: string) => void;
   user: User | null;
+  setUser: (user: User) => void;
 };

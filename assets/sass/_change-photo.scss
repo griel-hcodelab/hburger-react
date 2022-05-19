@@ -2,101 +2,112 @@
 @use "vars";
 @use "components";
 
-.change-photo {
+#__next {
+    width: 100vw;
+    height: 100vh;
   .toast {
     position: fixed;
     bottom: -80px;
-    left: 0;
     z-index: 3;
-
     &.open {
         bottom: 0;
     }
   }
-  form {
-    align-items: center;
-    margin-top: var(--space);
-    flex-direction: column;
-    width: 100%;
-    max-width: 400px;
-    img {
-        width: 200px;
-        height: 200px;
-        border-radius: 50%;
-    }
-    #file {
-        display: none;
-    }
-    .choose-photo {
-        margin: var(--space) 0;
-        min-width: 176px;
-        border: none;
-        height: 50px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 16px;
-        font-weight: bold;
-        text-transform: uppercase;
-        text-decoration: none;
-        outline: none;
-        cursor: pointer;
-        border-radius: var(--radius);
-        background: var(--primary);
-        color: var(--white);
-        transition: opacity .2s ease-in-out;
-
-        &:hover {
-            opacity: 0.8;
-        }
-    }
-
-    &.cropping {
-        img {
-            height: auto;
-            border-radius: 0;
-            margin-top: 0;
-        }
-    }
-    
-    .fixed {
-        align-items: flex-start;
-        padding-left: var(--space);
+  > section {
         width: 100%;
-        button {
-            margin: var(--space) 0;
-            min-width: 176px;
-            border: none;
-            height: 50px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 16px;
-            font-weight: bold;
-            text-transform: uppercase;
-            text-decoration: none;
-            outline: none;
-            cursor: pointer;
-            border-radius: var(--radius);
-            background: var(--white);
-            color: var(--primary);
-            transition: opacity .2s ease-in-out;
-
-            &:hover {
-                opacity: 0.8;
+        >main {
+            padding-bottom:0;
+            form#change-photo{
+                align-items: center;
+                margin-top: var(--space);
+                flex-direction: column;
+                width: 100%;
+                #photo-preview{
+                    max-width: 300px;
+                    max-height: 300px;
+                    border-radius: 50%;
+                }
+                #file {
+                    display: none;
+                }
+                .choose-photo {
+                    margin: var(--space) 0;
+                    padding: 10px;
+                    min-width: 176px;
+                    border: none;
+                    height: 50px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    font-size: 16px;
+                    font-weight: bold;
+                    text-transform: uppercase;
+                    text-decoration: none;
+                    outline: none;
+                    cursor: pointer;
+                    border-radius: var(--radius);
+                    background: var(--primary);
+                    color: var(--white);
+                    transition: opacity .2s ease-in-out;
+            
+                    &:hover {
+                        opacity: 0.8;
+                    }
+                }
+            
+                &.cropping {
+                    img {
+                        height: auto;
+                        border-radius: 0;
+                        margin-top: 0;
+                    }
+                }
+                
+                .fixed {
+                    align-items: flex-start;
+                    padding-left: var(--space);
+                    width: 100%;
+                    button {
+                        margin: var(--space);
+                        padding: 10px;
+                        min-width: 176px;
+                        border: none;
+                        height: 50px;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        font-size: 16px;
+                        font-weight: bold;
+                        text-transform: uppercase;
+                        text-decoration: none;
+                        outline: none;
+                        cursor: pointer;
+                        border-radius: var(--radius);
+                        background: var(--white);
+                        color: var(--primary);
+                        transition: opacity .2s ease-in-out;
+            
+                        &:hover {
+                            opacity: 0.8;
+                        }
+                    }
+                }
             }
         }
-    }
   }
 }
 
 @media (min-width: 1200px) {
-  .change-photo {
-      form {
-          img {
-              width: 256px;
-              height: 256px;
-          }
-      }
-  }
+    #__next {
+        > section {
+            >main {
+                form#change-photo{
+                    #photo-preview {
+                        width: 400px;
+                        height: 400px;
+                    }
+                }
+            }
+        }
+    }
 }

@@ -139,6 +139,12 @@
                     }
                 }
             }
+            > form {
+                height: calc(100vh - 300px);
+                overflow: auto;
+                min-height: 200px;
+                @include components.scrollbar;
+            }
             > section {
                 height: calc(100vh - 494px);
                 overflow: auto;
