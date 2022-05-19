@@ -10,27 +10,30 @@ import { OrderCard } from "../Components/Order/Card";
 import { Order } from "../Types/Orders/OrderType";
 
 const Orders: NextPage = () => {
-
   const [orders, setOrders] = useState<Order[]>([]);
 
-  useEffect(() => {
+  const getOrders = () => {
     axios.get('/api/orders')
     .then((response) => {
       setOrders(response.data);
     });
-  }, []);
+  };
+
+  useEffect(getOrders, []);
 
   return (
     <>
       <MetaTitle title="Seus Pedidos :: HBurger" />
-      {/* <Header /> */}
-      <main>
-        <Title text={<h1>Meus Pedidos</h1>} />
-        <Button tag="a" href="/" value="QUER MAIS UM H-BURGER?" />
-        <ul id="list-orders">
-          {orders.map((order) => <OrderCard key={order.id} order={order} />)}
-        </ul>
-      </main>
+      <section>
+        <Header />
+        <main>
+          <Title text={<h1>Meus Pedidos</h1>} />
+          <Button tag="a" href="/" value="QUER MAIS UM H-BURGER?" />
+          <ul id="list-orders">
+            {orders.map((order) => <OrderCard key={order.id} order={order} onCancel={getOrders} />)}
+          </ul>
+        </main>
+      </section>
     </>
   );
 };

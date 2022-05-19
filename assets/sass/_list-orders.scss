@@ -10,6 +10,7 @@
     overflow: auto;
     > li {
         --card-height: 230px;
+        --card-opacity: 1;
         position: relative;
         background-color: var(--white);
         border-radius: var(--radius);
@@ -19,6 +20,12 @@
         /* Roberto */
         overflow: hidden;
         height: var(--card-height);
+        &.show-confirm {
+            --card-opacity: 0.25;
+            .confirm {
+                left: 0;
+            }
+        }
         .detail {
             color: #000;
             text-align: left;
@@ -46,15 +53,13 @@
             transition: 1s;
             left: -100%;
             position: absolute;
-            &.show {
-                left: 0;
-            }
             button {
                 border-radius: var(--radius);
                 border: 0;
                 background-color: #ff1b1b;
+                padding: 10px;
                 margin: 10px;
-                height: 35px;
+                min-height: 40px;
                 outline: none;
                 color: #FFF;
                 font-weight: bold;
@@ -83,9 +88,11 @@
             font-size: 24px;
             width: 40px;
             text-align: center;
+            opacity: var(--card-opacity);
         }
         .content {
             flex: 1;
+            opacity: var(--card-opacity);
             .title {
                 background-color: var(--primary);
                 color: var(--white);
@@ -111,6 +118,7 @@
             justify-content: center;
             border-left: var(--dark) 1px dashed;
             margin-left: 10px;
+            opacity: var(--card-opacity);
             button {
                 width: 40px;
                 height: 40px;

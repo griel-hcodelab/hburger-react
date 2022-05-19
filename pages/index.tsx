@@ -15,7 +15,6 @@ const ComponentPage: NextPage = () => {
     <Fragment>
       <AuthContext>
       <TrayContext>
-      <div id="app">
         <TrayItemsContext>
         <section>
           <Header />
@@ -23,7 +22,6 @@ const ComponentPage: NextPage = () => {
         </section>
         <Aside />
         </TrayItemsContext>
-      </div>
       </TrayContext>
       </AuthContext>
     </Fragment>

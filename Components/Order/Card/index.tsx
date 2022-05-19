@@ -1,15 +1,27 @@
 import axios from "axios";
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
+import { useAuth } from "../../../Context/AuthContext";
 import { Order } from "../../../Types/Orders/OrderType";
 import { formatPrice } from "../../../utils/formatPrice";
 
-export const OrderCard = ({ order } : { order: Order}) => {
+type OrderCardProps = {
+  order: Order;
+  onCancel: () => void;
+};
+
+export const OrderCard = ({ order, onCancel } : OrderCardProps) => {
   const [showAlert, setShowAlert] = useState(false);
   const [canDeleteOrder, setCanDeleteOrder] = useState(true);
   const [paymentSituationName, setPaymentSituationName] = useState('');
 
-  useEffect(() => {
+  const { token } = useAuth();
+
+  const formatOrderId = (): string => {
+    return `${format(new Date(order.createdAt), 'yyyyMMdd')}${String(order.id).padStart(4, '0')}`;
+  };
+
+  const getPaymentSituationName = () => {
     axios.get(`payment-situations/${order.payment_situation_id}`, {
       baseURL: process.env.API_URL,
     })
@@ -17,24 +29,38 @@ export const OrderCard = ({ order } : { order: Order}) => {
       setPaymentSituationName(response.data.name);
       setCanDeleteOrder([1, 2, 3, 4, 5].includes(order.payment_situation_id));
     });
-  }, [order]);
-
-  const formatOrderId = (order: Order): string => {
-    return `${format(new Date(order.createdAt), 'yyyyMMdd')}${String(order.id).padStart(4, '0')}`;
   };
 
+  const cancelOrder = () => {
+    axios.delete(`/orders/${order.id}`, {
+      baseURL: process.env.API_URL,
+      headers: {
+        authorization: `Bearer ${token}`,
+      },
+    })
+    .then(onCancel)
+    .catch((error) => {
+      console.log(error);
+    })
+    .finally(() => setShowAlert(false));
+  };
+
+  useEffect(getPaymentSituationName, [order]);
+
   return (
-    <li>
-      <div className={[ 'confirm', showAlert ? 'show' : '' ].join(' ')}>
-        <p>Você quer mesmo apagar este pedido?</p>
+    <li className={showAlert ? 'show-confirm' : ''}>
+      <div className="confirm">
+        <p>Deseja mesmo cancelar este pedido?</p>
         <div className="wrap">
-          <button type="button" className="confirmYes 202221019560">Sim, eu quero apagar</button>
+          <button type="button" className="confirmYes 202221019560"
+            onClick={cancelOrder}
+          >Sim, eu quero cancelar</button>
           <button type="button" className="confirmNo 202221019560"
             onClick={() => setShowAlert(false)}
           >Pensando bem, deixe ele aí...</button>
         </div>
       </div>
-      <div className="id">{formatOrderId(order)}</div>
+      <div className="id">{formatOrderId()}</div>
       <div className="content">
         <div className="title">Detalhes do Pedido</div>
         <ul>
@@ -56,7 +82,7 @@ export const OrderCard = ({ order } : { order: Order}) => {
           </li>
           <li>
             <span>N°:</span>
-            <span>{formatOrderId(order)}</span>
+            <span>{formatOrderId()}</span>
           </li>
         </ul>
       </div>
