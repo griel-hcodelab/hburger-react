@@ -11,7 +11,7 @@ import { LoginFormData } from '../Types/Auth/LoginFormData';
 const PageComponent: NextPage = () => {
   const [formIsLoading, setFormIsLoading] = useState(false);
   const [toastType, setToastType] = useState<'success' | 'danger'>('danger');
-  const [toastIsOpen, setToastIsOpen] = useState(true);
+  const [toastIsOpen, setToastIsOpen] = useState(false);
   const [error, setError] = useState('');
 
   const { register, handleSubmit } = useForm<LoginFormData>();
@@ -39,7 +39,7 @@ const PageComponent: NextPage = () => {
 
     setTimeout(() => {
       setToastIsOpen(false);
-    }, 3000);
+    }, 5000);
   };
 
   return (

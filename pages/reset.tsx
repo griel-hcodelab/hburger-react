@@ -42,7 +42,7 @@ const PageComponent: NextPage = () => {
 
     setTimeout(() => {
       setToastIsOpen(false);
-    }, 3000);
+    }, 5000);
   };
 
   return (

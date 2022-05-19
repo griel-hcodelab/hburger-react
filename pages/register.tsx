@@ -5,9 +5,13 @@ import { useForm } from 'react-hook-form';
 import { useAuth } from '../Context/AuthContext';
 import { RegisterFormData } from '../Types/Auth/RegisterFormData';
 import axios from 'axios';
+import { Toast } from '../Components/Toast';
 
 const PageComponent: NextPage = () => {
   const [formIsLoading, setFormIsLoading] = useState(false);
+  const [toastType, setToastType] = useState<'success' | 'danger'>('danger');
+  const [toastIsOpen, setToastIsOpen] = useState(false);
+  const [error, setError] = useState('');
   const { register, handleSubmit } = useForm<RegisterFormData>();
   const { redirectToNextURL, setToken } = useAuth();
 
@@ -25,10 +29,20 @@ const PageComponent: NextPage = () => {
       setToken(data.token);
       redirectToNextURL();
     } catch (error: any) {
-      alert(error.response.data.message);
+      showErrorToast(error.response.data.message);
     } finally {
       setFormIsLoading(false);
     }
+  };
+
+  const showErrorToast = (message: string) => {
+    setError(message);
+    setToastType('danger');
+    setToastIsOpen(true);
+
+    setTimeout(() => {
+      setToastIsOpen(false);
+    }, 5000);
   };
 
   return (
@@ -62,6 +76,9 @@ const PageComponent: NextPage = () => {
             {formIsLoading ? 'Enviando' : 'Enviar'}
           </button>
         </footer>
+        <Toast type={toastType} open={toastIsOpen}>
+        <p>{error}</p>
+      </Toast>
       </form>
     </AuthLayout>
   );
