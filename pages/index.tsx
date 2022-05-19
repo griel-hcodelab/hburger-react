@@ -12,10 +12,7 @@ const ComponentPage: NextPage = () => {
   return (
     <>
     <MetaTitle title="HBurger" />
-    <Fragment>
-      <AuthContext>
       <TrayContext>
-      <div id="app">
         <TrayItemsContext>
         <section>
           <Header />
@@ -23,10 +20,7 @@ const ComponentPage: NextPage = () => {
         </section>
         <Aside />
         </TrayItemsContext>
-      </div>
       </TrayContext>
-      </AuthContext>
-    </Fragment>
     </>
   )
 }

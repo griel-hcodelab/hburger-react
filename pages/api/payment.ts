@@ -7,6 +7,8 @@ import { sessionOptions } from "../../utils/session";
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     try {
 
+        
+
         const {
             cardToken,
             installments,

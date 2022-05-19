@@ -13,5 +13,6 @@ declare module 'iron-session' {
   interface IronSessionData {
     token: string;
     user: User;
+    order: object;
   }
 }

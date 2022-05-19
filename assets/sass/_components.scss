@@ -26,20 +26,20 @@
   }
 }
 
-// @mixin horizontalTitle {
-//   background-color: var(--white10);
-//   height: 100px;
-//   justify-content: center;
-//   align-items: center;
-//   h1 {
-//     font-weight: 100;
-//     font-size: 32px;
-//     margin: 0;
-//     span {
-//       color: var(--primary);
-//     }
-//   }
-// }
+ @mixin horizontalTitle {
+   background-color: var(--white10);
+   height: 100px;
+   justify-content: center;
+   align-items: center;
+   h1 {
+     font-weight: 100;
+     font-size: 32px;
+     margin: 0;
+     span {
+       color: var(--primary);
+     }
+   }
+ }
 
 @mixin category-list {
   h2 {
@@ -58,22 +58,24 @@
   justify-content: center;
   align-items: center;
   #logo-icon {
-    width: 100px;
-    height: 127px;
+    width: 70px;
+    height: 90px;
   }
   #logo-text {
     margin-top: var(--space);
-    width: 220px;
-    height: 60px;
+    width: 160px;
+    height: 40px;
   }
   @media (min-width: vars.$desktopStartWidth) {
     flex-direction: row;
     #logo-icon {
-      width: initial;
+      width: 100px;
+      height: 127px;
     }
     #logo-text {
       margin-left: var(--space);
-      width: initial;
+      width: 220px;
+      height: 60px;
     }
   }
 }
