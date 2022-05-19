@@ -11,6 +11,7 @@ import { isCPF } from "../utils/isCPF";
 import { get } from 'lodash'
 import axios from "axios";
 import { useRouter } from "next/router";
+import { Order } from "../Types/Orders/OrderType";
 
 type BurguerCreate = {
     installments: number;
@@ -40,6 +41,10 @@ type InstallmentOptions = {
     number: number;
     value: number;
     description: string;
+}
+
+type orderValue = {
+
 }
 
 declare var MercadoPago: any;
