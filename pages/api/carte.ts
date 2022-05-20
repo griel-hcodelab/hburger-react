@@ -49,6 +49,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             req.session.order = result;
 
             await req.session.save();
+            
 
             return res.status(200).json(result);
         })

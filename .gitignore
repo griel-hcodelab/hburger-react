@@ -3,6 +3,8 @@
 # Custom
 package-lock.json
 
+#vscode
+/.vscode
 # dependencies
 /node_modules
 /.pnp
