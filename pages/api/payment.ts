@@ -4,6 +4,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { BurguerCreate } from "../../Types/BurguerCreate";
 import { CarteType } from "../../Types/CarteType";
 import { Order } from "../../Types/Orders/OrderType";
+import { PaymentCreate } from "../../Types/PaymentCreate";
 import { sessionOptions } from "../../utils/session";
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -11,12 +12,15 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
         const { order, person, address, total } = req.session.order
 
-
         const {
             cardToken,
             installments,
             paymentMethod,
-            cardDocument
+            cardDocument,
+            cardFirstSixDigits,
+            cardLastFourDigits,
+            situationPayment,
+            paymentTypeId
         } = req.body
         const data = {
             order,
@@ -26,7 +30,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             cardToken,
             installments,
             document: cardDocument,
-            paymentMethod
+            paymentMethod,
         } as CarteType;
 
         if (!cardToken) {
@@ -41,12 +45,28 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             })
         }
 
-        const response = await axios.patch<Order>(`/payment-situations/${data.id}`, data, {
+        const response = await axios.patch<PaymentCreate>(`/payment-situations`, data, {
             baseURL: process.env.API_URL,
             headers: {
                 'Authorization': `Bearer ${req.session.token}`
-            }
+            },
         });
+
+        const payment = {
+            ...(req.session.order ?? {}),
+            cardFirstSixDigits,
+            cardLastFourDigits,
+            situationPayment,
+            paymentTypeId,
+            data
+        }
+
+        req.session.order = payment
+
+        await req.session.save()
+
+        console.log("payment-situations", response);
+
 
         res.status(200).json(response.data)
 

@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { addMonths, format } from "date-fns";
-import { GetServerSidePropsResult, NextPage } from "next";
-import { Fragment, useEffect, useState } from "react";
+import { GetServerSidePropsContext, GetServerSidePropsResult, NextPage } from "next";
+import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { IMaskInput } from "react-imask";
 import { Header } from "../Components/Header";
@@ -11,14 +11,18 @@ import { isCPF } from "../utils/isCPF";
 import { get } from 'lodash'
 import axios from "axios";
 import { useRouter } from "next/router";
-import { Order } from "../Types/Orders/OrderType";
-import { CarteType } from "../Types/CarteType";
+import { withIronSessionSsr } from "iron-session/next";
+import { sessionOptions } from "../utils/session";
 
-type BurguerCreate = {
+type CarteType = {
     installments: number;
     cardToken: number;
     paymentMethod: string;
     document: string;
+    cardFirstSixDigits:string;
+    cardLastFourDigits: string;
+    situationPayment: string;
+    paymentTypeId: string;
 }
 
 
@@ -51,7 +55,7 @@ type ComponentPageProps = {
     amount: string
 }
 
-const ComponentPage: NextPage<ComponentPageProps> = ({ amount = '1000' }) => {
+const ComponentPage: NextPage<ComponentPageProps> = ({ amount = '50' }) => {
     const router = useRouter();
 
     const {
@@ -77,6 +81,7 @@ const ComponentPage: NextPage<ComponentPageProps> = ({ amount = '1000' }) => {
     const [issuers, setIssuers] = useState<Issuer[]>([])
     const [installmentOptions, setInstallmentOptions] = useState<InstallmentOptions[]>([])
     const [paymentMethodId, setPaymentMethodId] = useState('')
+    const [paymentTypeId, setPaymentTypeId] = useState('')
 
     const initMercadoPago = () => {
 
@@ -117,6 +122,7 @@ const ComponentPage: NextPage<ComponentPageProps> = ({ amount = '1000' }) => {
                 const info = response[0]
 
                 setPaymentMethodId(info.payment_method_id)
+                setPaymentTypeId(info.payment_type_id)
                 setValue('installments', '1')
 
                 setInstallmentOptions(info.payer_costs.map(
@@ -165,9 +171,9 @@ const ComponentPage: NextPage<ComponentPageProps> = ({ amount = '1000' }) => {
     }, [])
 
     const createPayment = (data: CarteType) => {
-        axios.patch('/api/payment', data).then(() => {
-            //router.push(`/`)
-            console.log(data);
+        axios.post('/api/payment', data).then(() => {
+            router.push(`/orders`)
+            console.log("api/payment", data);
 
         }).catch((error) => {
             setError('server', {
@@ -229,13 +235,17 @@ const ComponentPage: NextPage<ComponentPageProps> = ({ amount = '1000' }) => {
             identificationType: cardDocument.length === 11 ? 'CPF' : 'CNPJ',
             identificationNumber: cardDocument,
         }).then((response: any) => {
-            console.log(response.cardholder);
+            console.log(response);
 
             createPayment({
                 cardToken: response.id,
                 document: cardDocument,
                 installments: Number(installments),
                 paymentMethod: paymentMethodId,
+                cardFirstSixDigits: response.first_six_digits,
+                cardLastFourDigits: response.last_four_digits,
+                situationPayment: response.cardholder.name,
+                paymentTypeId
             })
 
 
@@ -375,12 +385,25 @@ const ComponentPage: NextPage<ComponentPageProps> = ({ amount = '1000' }) => {
 
 export default ComponentPage;
 
-// export const getServerSideProps: GetServerSidePropsResult<ComponentPageProps> = () => {
+type PaymentResponse = {
+    amount: number
+}
 
-//     const {data} = axios.
-//     return {
-//         prop: {
-//             amount: "1"
-//         }
-//     }
-// }
+export const getServerSideProps = withIronSessionSsr(async ({req}: GetServerSidePropsContext) => {
+
+    const { data } = await axios.get<PaymentResponse>(`/orders`, {
+        baseURL: process.env.API_URL,
+        headers: {
+            'Authorization': `Bearer ${req.session.token}`
+        },
+        params: {
+            order: req.session.order.total
+        }
+    });
+
+    return {
+        props: {
+            amount: String(data.amount)
+        } as ComponentPageProps
+    }
+}, sessionOptions)
