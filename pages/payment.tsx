@@ -19,10 +19,12 @@ type CarteType = {
     cardToken: number;
     paymentMethod: string;
     document: string;
-    cardFirstSixDigits:string;
+    cardFirstSixDigits: string;
     cardLastFourDigits: string;
     situationPayment: string;
     paymentTypeId: string;
+    cardName: string
+    data?: CarteType
 }
 
 
@@ -36,6 +38,8 @@ type FormData = {
     cardDocument: string;
     token: string;
     server?: string;
+    situationPayment: string;
+    cardName: string
 }
 
 type Issuer = {
@@ -55,7 +59,7 @@ type ComponentPageProps = {
     amount: string
 }
 
-const ComponentPage: NextPage<ComponentPageProps> = ({ amount = '50' }) => {
+const ComponentPage: NextPage<ComponentPageProps> = ({ amount }) => {
     const router = useRouter();
 
     const {
@@ -74,6 +78,7 @@ const ComponentPage: NextPage<ComponentPageProps> = ({ amount = '50' }) => {
     const [mp, setMp] = useState<any>(null)
     const [bin, setBin] = useState('')
     const name = watch("name")
+    const cardName = watch("cardName")
     const expiry = watch("expiry")
     const cvv = watch("cvv")
     const installments = watch("installments")
@@ -95,6 +100,7 @@ const ComponentPage: NextPage<ComponentPageProps> = ({ amount = '50' }) => {
         if (process.env.NODE_ENV === 'development') {
             if (mp) {
                 setValue('number', '4235647728025682');
+                setValue('cardName', 'Fulano de Tal');
                 setValue('name', 'SECU');
                 setValue('expiry', format(addMonths(new Date(), 1), 'MM/yyyy'));
                 setValue('cvv', '123');
@@ -115,11 +121,12 @@ const ComponentPage: NextPage<ComponentPageProps> = ({ amount = '50' }) => {
 
             mp.getInstallments({
                 bin,
-                amount,
+                amount: "90",
                 locale: 'pt-BR',
             }).then((response: any) => {
 
                 const info = response[0]
+                console.log(response);
 
                 setPaymentMethodId(info.payment_method_id)
                 setPaymentTypeId(info.payment_type_id)
@@ -131,6 +138,8 @@ const ComponentPage: NextPage<ComponentPageProps> = ({ amount = '50' }) => {
                         value: cost.amount,
                         description: cost.recommended_message
                     })))
+
+
 
             }).catch((error: any) => {
                 console.log(error);
@@ -184,7 +193,7 @@ const ComponentPage: NextPage<ComponentPageProps> = ({ amount = '50' }) => {
 
     const onSubmit: SubmitHandler<FormData> = (data) => {
 
-        console.log(data)
+        console.log("submitHandler", data)
 
 
         const expirtyMonth = Number(expiry.split('/')[0]);
@@ -235,19 +244,25 @@ const ComponentPage: NextPage<ComponentPageProps> = ({ amount = '50' }) => {
             identificationType: cardDocument.length === 11 ? 'CPF' : 'CNPJ',
             identificationNumber: cardDocument,
         }).then((response: any) => {
-            console.log(response);
+            let situationPayment = response.cardholder.name
+
+
+
+            if (situationPayment == "APRO") {
+
+            }
 
             createPayment({
                 cardToken: response.id,
                 document: cardDocument,
+                cardName,
                 installments: Number(installments),
                 paymentMethod: paymentMethodId,
                 cardFirstSixDigits: response.first_six_digits,
                 cardLastFourDigits: response.last_four_digits,
                 situationPayment: response.cardholder.name,
-                paymentTypeId
+                paymentTypeId,
             })
-
 
         }).catch((error: any) => {
             setError('token', {
@@ -255,9 +270,6 @@ const ComponentPage: NextPage<ComponentPageProps> = ({ amount = '50' }) => {
             });
 
         })
-
-
-
 
         // mp.payment.save(req.body)
         // .then(function (response) {
@@ -272,10 +284,7 @@ const ComponentPage: NextPage<ComponentPageProps> = ({ amount = '50' }) => {
 
     return (
         <section>
-
-
             <Header />
-
             <main>
                 <Title text={<h1>Pagamento</h1>} />
                 <section>
@@ -284,6 +293,11 @@ const ComponentPage: NextPage<ComponentPageProps> = ({ amount = '50' }) => {
                         <div id="alert">
 
                         </div>
+
+                        {/* <input type="hidden" id="name" {...register('name', {
+                           
+                        })} /> */}
+
                         <div className="field">
                             <IMaskInput
                                 mask={'0000 0000 0000 0000'}
@@ -318,7 +332,7 @@ const ComponentPage: NextPage<ComponentPageProps> = ({ amount = '50' }) => {
                         </div>
 
                         <div className="field">
-                            <input type="text" id="name" placeholder="Digite o nome impresso no cartão" {...register('name', {
+                            <input type="text" id="card-name" placeholder="Digite o nome impresso no cartão" {...register('cardName', {
                                 required: 'Digite o nome impresso no cartão.'
                             })} />
                             <label htmlFor="expiry">Nome Titular Cartão</label>
@@ -378,7 +392,6 @@ const ComponentPage: NextPage<ComponentPageProps> = ({ amount = '50' }) => {
                     </form>
                 </section>
             </main>
-
         </section>
     );
 }
@@ -386,10 +399,10 @@ const ComponentPage: NextPage<ComponentPageProps> = ({ amount = '50' }) => {
 export default ComponentPage;
 
 type PaymentResponse = {
-    amount: number
+    amount: string
 }
 
-export const getServerSideProps = withIronSessionSsr(async ({req}: GetServerSidePropsContext) => {
+export const getServerSideProps = withIronSessionSsr(async ({ req }: GetServerSidePropsContext) => {
 
     const { data } = await axios.get<PaymentResponse>(`/orders`, {
         baseURL: process.env.API_URL,
@@ -397,13 +410,17 @@ export const getServerSideProps = withIronSessionSsr(async ({req}: GetServerSide
             'Authorization': `Bearer ${req.session.token}`
         },
         params: {
-            order: req.session.order.total
+            amount: req.session.order.total
         }
     });
+
+    console.log("amount", data.amount);
+
 
     return {
         props: {
             amount: String(data.amount)
         } as ComponentPageProps
+
     }
 }, sessionOptions)

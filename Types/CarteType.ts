@@ -4,4 +4,5 @@ export type CarteType = {
     address?: number;
     total: number;
     observation?: string;
+    data?: CarteType
 }

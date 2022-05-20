@@ -1,9 +1,7 @@
 import axios from "axios";
 import { withIronSessionApiRoute } from "iron-session/next";
 import { NextApiRequest, NextApiResponse } from "next";
-import { BurguerCreate } from "../../Types/BurguerCreate";
 import { CarteType } from "../../Types/CarteType";
-import { Order } from "../../Types/Orders/OrderType";
 import { PaymentCreate } from "../../Types/PaymentCreate";
 import { sessionOptions } from "../../utils/session";
 
@@ -45,12 +43,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             })
         }
 
-        const response = await axios.patch<PaymentCreate>(`/payment-situations`, data, {
+        const response = await axios.get(`/payment-situations`,  {
             baseURL: process.env.API_URL,
             headers: {
                 'Authorization': `Bearer ${req.session.token}`
             },
-        });
+        });        
 
         const payment = {
             ...(req.session.order ?? {}),
@@ -58,15 +56,12 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
             cardLastFourDigits,
             situationPayment,
             paymentTypeId,
-            data
-        }
+            data: response.data,
+        } as CarteType
 
         req.session.order = payment
 
         await req.session.save()
-
-        console.log("payment-situations", response);
-
 
         res.status(200).json(response.data)
 
