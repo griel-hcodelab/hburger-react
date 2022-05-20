@@ -10,9 +10,8 @@ const ComponentPage: NextPage = () => {
 
     return (
         <>
-        <AuthContext>
-            <MetaTitle title="Seus Endereços :: HBurger" />
-            <div id="app">
+            <AuthContext>
+                <MetaTitle title="Seus Endereços :: HBurger" />
 
                 <section>
                     <Header />
@@ -22,7 +21,6 @@ const ComponentPage: NextPage = () => {
                     </main>
                 </section>
 
-            </div>
             </AuthContext>
         </>
     )
