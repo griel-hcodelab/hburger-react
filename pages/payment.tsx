@@ -13,6 +13,8 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import { withIronSessionSsr } from "iron-session/next";
 import { sessionOptions } from "../utils/session";
+import { Order } from "../Types/Orders/OrderType";
+import { useAuth } from "../Context/AuthContext";
 
 type CarteType = {
     installments: number;
@@ -23,8 +25,8 @@ type CarteType = {
     cardLastFourDigits: string;
     situationPayment: string;
     paymentTypeId: string;
-    cardName: string
-    data?: CarteType
+    cardName: string;
+    data?: CarteType;
 }
 
 
@@ -56,11 +58,16 @@ type InstallmentOptions = {
 declare var MercadoPago: any;
 
 type ComponentPageProps = {
-    amount: string
+    amount: string;
+    orderId: number;
 }
 
-const ComponentPage: NextPage<ComponentPageProps> = ({ amount }) => {
+
+
+const ComponentPage: NextPage<ComponentPageProps> = ({ amount, orderId }) => {
     const router = useRouter();
+
+    const { token } = useAuth();
 
     const {
         register,
@@ -87,6 +94,7 @@ const ComponentPage: NextPage<ComponentPageProps> = ({ amount }) => {
     const [installmentOptions, setInstallmentOptions] = useState<InstallmentOptions[]>([])
     const [paymentMethodId, setPaymentMethodId] = useState('')
     const [paymentTypeId, setPaymentTypeId] = useState('')
+    const [payment, setPayment] = useState<number>(2);
 
     const initMercadoPago = () => {
 
@@ -121,12 +129,11 @@ const ComponentPage: NextPage<ComponentPageProps> = ({ amount }) => {
 
             mp.getInstallments({
                 bin,
-                amount: "90",
+                amount,
                 locale: 'pt-BR',
             }).then((response: any) => {
 
                 const info = response[0]
-                console.log(response);
 
                 setPaymentMethodId(info.payment_method_id)
                 setPaymentTypeId(info.payment_type_id)
@@ -182,8 +189,6 @@ const ComponentPage: NextPage<ComponentPageProps> = ({ amount }) => {
     const createPayment = (data: CarteType) => {
         axios.post('/api/payment', data).then(() => {
             router.push(`/orders`)
-            console.log("api/payment", data);
-
         }).catch((error) => {
             setError('server', {
                 message: error.message
@@ -192,8 +197,6 @@ const ComponentPage: NextPage<ComponentPageProps> = ({ amount }) => {
     }
 
     const onSubmit: SubmitHandler<FormData> = (data) => {
-
-        console.log("submitHandler", data)
 
 
         const expirtyMonth = Number(expiry.split('/')[0]);
@@ -245,11 +248,22 @@ const ComponentPage: NextPage<ComponentPageProps> = ({ amount }) => {
             identificationNumber: cardDocument,
         }).then((response: any) => {
             let situationPayment = response.cardholder.name
+            
 
 
-
-            if (situationPayment == "APRO") {
-
+            switch (situationPayment) {
+                case "APRO":
+                    setPayment(3);
+                    break;
+                case "SECU":
+                    setPayment(4);
+                    break;
+                case "OTHE":
+                    setPayment(4);
+                    break;
+                default:
+                    setPayment(2);
+                    break;
             }
 
             createPayment({
@@ -260,10 +274,23 @@ const ComponentPage: NextPage<ComponentPageProps> = ({ amount }) => {
                 paymentMethod: paymentMethodId,
                 cardFirstSixDigits: response.first_six_digits,
                 cardLastFourDigits: response.last_four_digits,
-                situationPayment: response.cardholder.name,
+                situationPayment: cardName,
                 paymentTypeId,
             })
+        }).then(async () => { 
+            
+            console.log(token);
 
+            await axios.patch(`${process.env.API_URL}/orders/${orderId}`, {
+                headers: {
+                    authorization: `Bearer ${token}`,
+                },
+                body: {
+                    payment_situation_id: payment,
+                }
+            }).catch((e) => {
+                console.log('server', e.messge);
+            });
         }).catch((error: any) => {
             setError('token', {
                 message: error.message
@@ -398,29 +425,24 @@ const ComponentPage: NextPage<ComponentPageProps> = ({ amount }) => {
 
 export default ComponentPage;
 
-type PaymentResponse = {
-    amount: string
-}
 
 export const getServerSideProps = withIronSessionSsr(async ({ req }: GetServerSidePropsContext) => {
 
-    const { data } = await axios.get<PaymentResponse>(`/orders`, {
+    const { data } = await axios.get<Order>(`/orders/${req.session.order.order}`, {
         baseURL: process.env.API_URL,
         headers: {
             'Authorization': `Bearer ${req.session.token}`
         },
         params: {
-            amount: req.session.order.total
+            amount: req.session.order.total,
+            orderId: req.session.order.order
         }
     });
 
-    console.log("amount", data.amount);
-
-
     return {
         props: {
-            amount: String(data.amount)
-        } as ComponentPageProps
+            amount: String(data.total), orderId: data.id
+        } as ComponentPageProps,
 
     }
 }, sessionOptions)
