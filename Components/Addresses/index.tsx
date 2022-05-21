@@ -1,4 +1,5 @@
 import axios from 'axios';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useAuth } from '../../Context/AuthContext';
 import { TypeAddresses } from '../../Types/Addresses';
@@ -56,7 +57,7 @@ export const Addresses = () => {
                             <p>{zipcode}</p>
                         </div>
                         <div className={styles.wrap}>
-                            <button data-id={id}>Editar</button>
+                            <Link href={`addresses/${id}`}>Editar</Link>
                             <button onClick={removeAddress} data-id={id}>Apagar</button>
                         </div>
                     </div>

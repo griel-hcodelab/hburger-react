@@ -1,5 +1,5 @@
 export type TypeAddresses = {
-    id: number,
+    id?: number,
     street: string,
     number?: string,
     complement?: string,

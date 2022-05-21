@@ -17,7 +17,6 @@ const ComponentPage: NextPage = () => {
                     <Header />
                     <main>
                         <Addresses />
-
                     </main>
                 </section>
 

@@ -80,13 +80,17 @@
                 text-transform: uppercase;
                 background-color: var(--primary);
                 padding: 5px 10px;
-                padding-right: 40px;
                 border-radius: 5px;
                 min-height: 34px;
                 overflow: hidden;
                 text-overflow: ellipsis;
                 white-space: nowrap;
                 max-width: 50%;
+                cursor: pointer;
+                transform: scale(0.9);
+                &:hover {
+                    transform: scale(1);
+                }
             }
             @media (max-width: 768px) {
                 height: 200px;

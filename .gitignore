@@ -2,6 +2,7 @@
 
 # Custom
 package-lock.json
+yarn.lock
 
 #vscode
 /.vscode
