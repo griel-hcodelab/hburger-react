@@ -7,9 +7,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse)=>{
 
     const {body} = req.body;
 
-    const post = async ()=>{
+    console.log(body)
 
-        console.log('chegou no post')
+    const post = async ()=>{
 
         try {
 
@@ -32,13 +32,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse)=>{
 
     const update = async ()=>{
 
-        console.log('chegou no update')
-
         await axios.patch(`${process.env.API_URL}/addresses/${body.id}`, body, {
             headers: {
                 'Authorization': `Bearer ${req.session.token}`
-            }
-            
+            } 
         })
         .then(({data})=>{
             return res.status(200).json(data);
@@ -57,10 +54,9 @@ const handler = async (req: NextApiRequest, res: NextApiResponse)=>{
         case 'PATCH':
             await update();
         break;
+
+
     }
-
-
-
 
 }
 

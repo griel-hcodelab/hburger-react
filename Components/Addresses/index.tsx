@@ -25,15 +25,20 @@ export const Addresses = () => {
     }
 
     const removeAddress = async (e: any) => {
-        console.log(e.target.dataset.id);
-        await axios.delete(`api/addresses/${e.target.dataset.id}`, {
-            headers: {
-                Authorization: `Bearer ${token}`
+
+        console.log('clicou')
+
+        const id = e.target.dataset.id;
+
+        await axios.post(`/api/delete-address`, {
+            body: {
+                id
             }
         })
-            .then(({ data }) => {
-                setAddresses(data);
-            })
+        .then(({data})=>{
+            getAddresses()
+        })
+
     }
 
     useEffect(() => {
@@ -58,9 +63,11 @@ export const Addresses = () => {
                         </div>
                         <div className={styles.wrap}>
                             <Link href={`addresses/${id}`}>
-                                <a className="btnBack" style={{background: 'green'}} href="javascript:void(0)">Editar</a>
+                                <a className="btnBack" style={{background: 'green'}} href="#">Editar</a>
                             </Link>
-                            <button  className="btnBack" onClick={removeAddress} data-id={id}>Apagar</button>
+                            <button  className="btnBack" onClick={(e)=>{
+                                confirm("Você deseja apagar este endereço? Este processo é irreversível.") ? removeAddress(e) : null
+                                }} data-id={id}>Apagar</button>
                         </div>
                     </div>
                 ))}
