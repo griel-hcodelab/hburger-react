@@ -26,3 +26,21 @@
 .wrap {
     justify-content: center;
 }
+
+.select_address_p {
+    color: #333;
+    font-weight: 100;
+    text-align: center;
+}
+
+.select_address {
+    border: none;
+    border-bottom: 1px solid #dd0e0e;
+    padding-bottom: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    outline: none;
+    font-weight: bold;
+    margin-bottom: 30px;
+}

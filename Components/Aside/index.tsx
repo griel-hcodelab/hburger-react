@@ -5,20 +5,21 @@ import { useTray } from "../../Context/TrayContext"
 import { useTrayItems } from "../../Context/TrayItemsContext";
 import { TrayItemsTypes } from "../../Types/Contexts/TrayItemsTypes";
 import { formatPrice } from "../../utils/formatPrice";
+import { AddressWidgetComponent } from "../Addresses/AddressWidgetComponent";
 import { Loading } from "../Loading";
 import styles from './aside.module.scss';
 
 export const Aside = () => {
 
-    const [loading, setLoading] = useState(false);
-
     const router = useRouter();
+
+    const [loading, setLoading] = useState(false);
 
     const { setOpen } = useTray();
 
     const [trayBurger, setTrayBurger] = useState([{}]);
 
-    const { total, trayItems, removeBurger } = useTrayItems()
+    const { address, total, trayItems, removeBurger } = useTrayItems();
 
     useEffect(() => {
 
@@ -31,8 +32,13 @@ export const Aside = () => {
 
         setLoading(true)
 
+        const dataToOrder = {
+            order: trayBurger,
+            address
+        }
+
         await axios.post(`/api/carte`, {
-            data: JSON.stringify(trayBurger)
+            data: JSON.stringify(dataToOrder)
         })
             .then((data) => {
                 router.push("/payment")
@@ -54,6 +60,8 @@ export const Aside = () => {
             </header>
             <section>
                 <div id="alert"></div>
+
+                <AddressWidgetComponent />
 
                 <ul>
                     {trayItems && trayBurger?.map((item: any, index: number) => (

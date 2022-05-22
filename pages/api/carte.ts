@@ -15,14 +15,15 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         const products: string[] = [];
         const aditions_itens: number[] = [];
 
-        json.forEach((item: any) => {
+        json.order.forEach((item: any) => {
             products.push(item.burger.id)
             aditions_itens.push(item.aditional.map(({ id }: { id: number }) => +id).join(','));
         });
 
         const form:any = {
             products: products.join(),
-            aditions_itens: aditions_itens.join('|')
+            aditions_itens: aditions_itens.join('|'),
+            address_id: json.address
         }
 
         const formData = new FormData()
@@ -50,13 +51,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
 
             await req.session.save();
             
-
             return res.status(200).json(result);
         })
         .catch((e:any)=>{
             res.status(e.response.status);
-        })
-        ;
+        });
 
 
     } catch (e: any) {
