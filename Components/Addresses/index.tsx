@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useAuth } from '../../Context/AuthContext';
 import { TypeAddresses } from '../../Types/Addresses';
+import Button from '../Button';
 import { Title } from '../Title'
 import styles from './addresses.module.scss';
 
@@ -49,6 +50,8 @@ export const Addresses = () => {
         <>
             <Title text="Seus Endereços" />
 
+            <Button tag="a" href="/addresses/new" value="NOVO ENDEREÇO" />
+
             <div id="addresses" className={styles.addresses}>
                 {addresses && addresses.map(({ id, street, number, complement, city, district, state, zipcode }: TypeAddresses, index) => (
                     <div key={index} className={styles.address}>
@@ -61,7 +64,7 @@ export const Addresses = () => {
                         </div>
                         <div className={styles.wrap}>
                             <Link href={`addresses/${id}`}>
-                                <a className="btnBack" style={{background: 'green'}} href="#">Editar</a>
+                                <a className="btnBack" style={{background: 'green'}}>Editar</a>
                             </Link>
                             <button  className="btnBack" onClick={(e)=>{
                                 confirm("Você deseja apagar este endereço? Este processo é irreversível.") ? removeAddress(e) : null
