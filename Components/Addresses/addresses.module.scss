@@ -1,30 +1,41 @@
 .addresses {
     flex-direction: column;
     padding: 10px;
+    @media (min-width: 768px) {
+        flex-direction: row;
+        justify-content: space-between;
+        flex-wrap: wrap;
+    }
 }
 
 .address {
-    background-color: #d7d7d7;
-    color: #333;
-    margin: 10px 0;
+    background-color: #202626;
+    color: #fff;
+    margin: 10px;
     padding: 20px;
     border-radius: 5px;
     flex-direction: row;
     justify-content: space-between;
+    flex: 1 1 100px;
+    outline: 1px solid #747474;
     p {
         margin: 0;
     }
     button {
         height: 40px;
-    width: 150px;
-    margin: 5px;
-    border-radius: 5px;
-    border: none;
+        width: 150px;
+        margin: 5px;
+        border-radius: 5px;
+        border: none;
     }
 }
 
 .wrap {
     justify-content: center;
+    &:nth-child(2) {
+        justify-content: space-between;
+        align-items: center;
+    }
 }
 
 .select_address_p {

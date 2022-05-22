@@ -17,16 +17,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse)=>{
             return res.status(200).json(data);
         })
 
-        await axios.delete('/addresses/my-addresses', {
-            baseURL: process.env.API_URL,
-            headers: {
-                'Authorization': `Bearer ${req.session.token}`
-            }
-        })
-        .then(({data})=>{
-            return res.status(200).json(data);
-        })
-    
 
     } catch (e:any) {
         res.status(e.response.status);

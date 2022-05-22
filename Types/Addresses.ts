@@ -6,5 +6,5 @@ export type TypeAddresses = {
     district: string,
     city: string,
     state: string,
-    zipcode: string | number,
+    zipcode: string,
 }

@@ -1,12 +1,11 @@
 import axios from "axios";
 import { GetServerSidePropsContext, NextPage } from "next";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { IMaskInput } from "react-imask";
-import { Addresses } from "../../Components/Addresses";
 import { Header } from "../../Components/Header";
 import { MetaTitle } from "../../Components/Header/MetaTitle";
-
 import AuthContext from '../../Context/AuthContext'
 import { TypeAddresses } from "../../Types/Addresses";
 import { getZipcode } from "../../utils/getZipcode";
@@ -18,6 +17,8 @@ type SlugProps = {
 }
 
 const ComponentPage: NextPage<SlugProps> = ({ slug }) => {
+
+    const router = useRouter();
 
     const [address, setAddress] = useState<TypeAddresses>();
 
@@ -42,8 +43,12 @@ const ComponentPage: NextPage<SlugProps> = ({ slug }) => {
     }
 
     const setAddressData = (address: TypeAddresses) => {
+
+        if (address.zipcode){
+            setValue("zipcode", address?.zipcode.replace('-', '').replace('.', ''));
+        }
+
         setValue("street", address?.street);
-        setValue("zipcode", address?.zipcode);
         setValue("number", address?.number);
         setValue("complement", address?.complement);
         setValue("district", address?.district);
@@ -75,11 +80,17 @@ const ComponentPage: NextPage<SlugProps> = ({ slug }) => {
 
     const onSubmit: SubmitHandler<TypeAddresses> = async (data) => {
 
-        data.id = +slug;
+        data.id = Number(slug);
 
         await axios.patch(`/api/update-address`, {
             body: data
         })
+        .then(({data})=>{
+            router.push("/addresses")
+        })
+        .catch((e:any)=>{
+            console.log(e.message)
+        }) 
 
 
     }

@@ -57,8 +57,10 @@ export const Addresses = () => {
                             <p>{zipcode}</p>
                         </div>
                         <div className={styles.wrap}>
-                            <Link href={`addresses/${id}`}>Editar</Link>
-                            <button onClick={removeAddress} data-id={id}>Apagar</button>
+                            <Link href={`addresses/${id}`}>
+                                <a className="btnBack" style={{background: 'green'}} href="javascript:void(0)">Editar</a>
+                            </Link>
+                            <button  className="btnBack" onClick={removeAddress} data-id={id}>Apagar</button>
                         </div>
                     </div>
                 ))}
