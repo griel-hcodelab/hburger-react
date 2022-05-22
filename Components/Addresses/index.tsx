@@ -26,8 +26,6 @@ export const Addresses = () => {
 
     const removeAddress = async (e: any) => {
 
-        console.log('clicou')
-
         const id = e.target.dataset.id;
 
         await axios.post(`/api/delete-address`, {
