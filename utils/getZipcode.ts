@@ -13,7 +13,8 @@ export async function getZipcode(zipcode: string) {
         console.log(e.message)
     })
 
-    if (data.logradouro) {
+
+    if (data) {
 
         return {
             street: data.logradouro,
