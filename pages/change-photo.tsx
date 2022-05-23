@@ -18,7 +18,6 @@ type ComponentPageProps = {
 }
 
 const ComponentPage: NextPage<ComponentPageProps> = ({ token, user }) => {
-    console.log(token);
 
     const cropperRef = useRef<HTMLImageElement>(null);
     const imageRef = useRef<HTMLImageElement>(null);
@@ -28,7 +27,6 @@ const ComponentPage: NextPage<ComponentPageProps> = ({ token, user }) => {
     const [photo, setPhoto] = useState('');
     const [error, setError] = useState('');
     const { user: stateUser, setUser } = useAuth();
-    const photoAtual = user.photo;
 
     const onSubmit = useCallback((e: React.FormEvent<HTMLFormElement>) => {
 
@@ -108,7 +106,7 @@ const ComponentPage: NextPage<ComponentPageProps> = ({ token, user }) => {
                             />}
 
                             {!photo && <img
-                                src={photoAtual}
+                                src={"../images/default.png"}
                                 alt="Foto Atual"
                                 id="photo-preview"
                                 onClick={onSelectFile}
@@ -153,7 +151,7 @@ export const getServerSideProps = withAuthentication(async (context) => {
 
         const { token } = context.req.session;
 
-        const { data: user } = await axios.get<MeResponse>('/login/photo', {
+        const { data } = await axios.get<MeResponse>('/login/photo', {
             baseURL: process.env.API_URL,
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -161,7 +159,7 @@ export const getServerSideProps = withAuthentication(async (context) => {
         })
 
         return {
-            props: { token, user }
+            props: { token, data }
         }
 
     } catch (e) {
