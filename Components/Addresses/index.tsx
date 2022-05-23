@@ -8,7 +8,7 @@ import Button from '../Button';
 import { Title } from '../Title'
 import styles from './addresses.module.scss';
 
-const NewAddressDiv = styled.div`
+const NewButtonDiv = styled.div`
     display: flex;
     align-items: center;
 `
@@ -55,9 +55,9 @@ export const Addresses = () => {
         <>
             <Title text="Seus Endereços" />
 
-            <NewAddressDiv>
+            <NewButtonDiv>
                 <Button tag="a" href="/new-address" value="NOVO ENDEREÇO" />
-            </NewAddressDiv>
+            </NewButtonDiv>
 
             <div id="addresses" className={styles.addresses}>
                 {addresses && addresses.map(({ id, street, number, complement, city, district, state, zipcode }: TypeAddresses, index) => (
