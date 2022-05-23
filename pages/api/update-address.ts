@@ -7,8 +7,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse)=>{
 
     const {body} = req.body;
 
-    console.log(body)
-
     const post = async ()=>{
 
         try {
