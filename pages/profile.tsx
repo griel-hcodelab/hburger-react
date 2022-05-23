@@ -41,44 +41,6 @@ const ComponentPage: NextPage = () => {
 
                             </div>
 
-                            <div>
-                                <h2>Informação Residencial</h2>
-                            </div>
-                            
-                            <div className="field">
-                                <input type="text" name="zipcode" id="zipcode" required/>
-                                <label htmlFor="zipcode">CEP</label>
-                            </div>
-
-                            <div className="field">
-                                <input type="text" name="address" id="address" required/>
-                                <label htmlFor="address">Endereço</label>
-                            </div>
-
-                            <div className="field">
-                                <input type="text" name="number" id="number" required/>
-                                <label htmlFor="number">Número</label>
-                            </div>
-
-                            <div className="field">
-                                <input type="text" name="district" id="district" required/>
-                                <label htmlFor="district">Bairro</label>
-                            </div>
-
-                            <div className="fields">
-
-                                <div className="field">
-                                    <input type="text" name="city" id="city" required/>
-                                    <label htmlFor="city">Cidade</label>
-                                </div>
-
-                                <div className="field">
-                                    <input type="text" name="state" id="state" required/>
-                                    <label htmlFor="state">Estado</label>
-                                </div>
-
-                            </div>
-
                             <div id="alert"></div>
 
                             <footer>
