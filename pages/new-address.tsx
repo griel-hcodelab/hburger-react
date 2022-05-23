@@ -85,26 +85,26 @@ export default function NewAddressPage<NextPage>  (){
                         <h1>Cadastre um novo endereço de entrega</h1>
                         <form onSubmit={handleSubmit(onSubmit)}>
                             <div className="field">
-                                <IMaskInput id="zipcode" mask={'00.000-000'} {...register('zipcode', {
+                                <IMaskInput placeholder="Digite aqui seu CEP" id="zipcode" mask={'00.000-000'} {...register('zipcode', {
                                     required: 'Por favor, informe seu CEP',
                                 })} onBlur={async (e) => { await zipcode(e.target.value) }} />
                                 <label htmlFor="zipcode">CEP</label>
                             </div>
 
                             <div className="field">
-                                <input type="text" id="address" {...register('street', {
+                                <input placeholder="Digite aqui seu endereço" type="text" id="address" {...register('street', {
                                     required: 'Por favor, informe seu endereço',
                                 })} />
                                 <label htmlFor="address">Endereço</label>
                             </div>
 
                             <div className="field">
-                                <input type="text" id="number" {...register('number')} />
+                                <input type="text" placeholder="Digite aqui o número, se houver" id="number" {...register('number')} />
                                 <label htmlFor="number">Número</label>
                             </div>
 
                             <div className="field">
-                                <input type="text" id="district" {...register('district', {
+                                <input type="text" placeholder="Digite aqui seu bairro" id="district" {...register('district', {
                                     required: 'Por favor, informe seu bairro',
                                 })} />
                                 <label htmlFor="district">Bairro</label>
@@ -113,22 +113,22 @@ export default function NewAddressPage<NextPage>  (){
                             <div className="fields">
 
                                 <div className="field">
-                                    <input type="text" id="city" {...register('city', {
+                                    <input type="text" placeholder="Digite aqui sua cidade" id="city" {...register('city', {
                                         required: 'Por favor, informe sua cidade',
                                     })} />
                                     <label htmlFor="city">Cidade</label>
                                 </div>
 
                                 <div className="field">
-                                    <input type="text" id="state" {...register('state', {
+                                    <input type="text" placeholder="Digite aqui seu estado" id="state" {...register('state', {
                                         required: 'Por favor, informe seu estado',
                                     })} />
                                     <label htmlFor="state">Estado</label>
                                 </div>
 
                                 <div className="field">
-                                    <input type="text" id="country" {...register('country', {
-                                        required: 'Por favor, informe seu estado',
+                                    <input type="text" placeholder="Digite aqui seu país" id="country" {...register('country', {
+                                        required: 'Por favor, informe seu país',
                                     })} defaultValue={'Brasil'} />
                                     <label htmlFor="country">País</label>
                                 </div>

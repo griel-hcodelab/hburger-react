@@ -13,13 +13,19 @@ export async function getZipcode(zipcode: string) {
         console.log(e.message)
     })
 
-    return {
-        street: data.logradouro,
-        complement: data.complemento,
-        city: data.localidade,
-        district: data.bairro,
-        state: data.uf,
-        zipcode: data.cep
+    if (data.logradouro) {
+
+        return {
+            street: data.logradouro,
+            complement: data.complemento,
+            city: data.localidade,
+            district: data.bairro,
+            state: data.uf,
+            zipcode: data.cep
+        }
+
     }
+
+
 
 }
