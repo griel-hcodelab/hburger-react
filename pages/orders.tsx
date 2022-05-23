@@ -5,9 +5,14 @@ import Button from "../Components/Button";
 import { Header } from "../Components/Header"
 import { MetaTitle } from "../Components/Header/MetaTitle";
 import { Title } from "../Components/Title";
-import { format } from "date-fns";
 import { OrderCard } from "../Components/Order/Card";
 import { Order } from "../Types/Orders/OrderType";
+import styled from "styled-components";
+
+const NewButtonDiv = styled.div`
+    display: flex;
+    align-items: center;
+`
 
 const Orders: NextPage = () => {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -28,7 +33,9 @@ const Orders: NextPage = () => {
         <Header />
         <main>
           <Title text={<h1>Meus Pedidos</h1>} />
-          <Button tag="a" href="/" value="QUER MAIS UM H-BURGER?" />
+          <NewButtonDiv>
+            <Button tag="a" href="/" value="QUER MAIS UM H-BURGER?" />
+          </NewButtonDiv>
           <ul id="list-orders">
             {orders.map((order) => <OrderCard key={order.id} order={order} onCancel={getOrders} />)}
           </ul>
