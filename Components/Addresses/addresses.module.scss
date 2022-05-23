@@ -2,9 +2,9 @@
     flex-direction: column;
     padding: 10px;
     @media (min-width: 768px) {
-        flex-direction: row;
-        justify-content: space-between;
-        flex-wrap: wrap;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, 365px);
+        justify-content: center;
     }
 }
 
@@ -27,6 +27,9 @@
         margin: 5px;
         border-radius: 5px;
         border: none;
+    }
+    @media (min-width: 768px) {
+        max-width: 350px;
     }
 }
 

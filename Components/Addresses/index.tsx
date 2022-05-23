@@ -1,12 +1,17 @@
 import axios from 'axios';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import styled from 'styled-components';
 import { useAuth } from '../../Context/AuthContext';
 import { TypeAddresses } from '../../Types/Addresses';
 import Button from '../Button';
 import { Title } from '../Title'
 import styles from './addresses.module.scss';
 
+const NewAddressDiv = styled.div`
+    display: flex;
+    align-items: center;
+`
 
 export const Addresses = () => {
 
@@ -34,9 +39,9 @@ export const Addresses = () => {
                 id
             }
         })
-        .then(({data})=>{
-            getAddresses()
-        })
+            .then(({ data }) => {
+                getAddresses()
+            })
 
     }
 
@@ -50,7 +55,9 @@ export const Addresses = () => {
         <>
             <Title text="Seus Endereços" />
 
-            <Button tag="a" href="/addresses/new" value="NOVO ENDEREÇO" />
+            <NewAddressDiv>
+                <Button tag="a" href="/new-address" value="NOVO ENDEREÇO" />
+            </NewAddressDiv>
 
             <div id="addresses" className={styles.addresses}>
                 {addresses && addresses.map(({ id, street, number, complement, city, district, state, zipcode }: TypeAddresses, index) => (
@@ -64,11 +71,11 @@ export const Addresses = () => {
                         </div>
                         <div className={styles.wrap}>
                             <Link href={`addresses/${id}`}>
-                                <a className="btnBack" style={{background: 'green'}}>Editar</a>
+                                <a className="btnBack" style={{ background: 'green' }}>Editar</a>
                             </Link>
-                            <button  className="btnBack" onClick={(e)=>{
+                            <button className="btnBack" onClick={(e) => {
                                 confirm("Você deseja apagar este endereço? Este processo é irreversível.") ? removeAddress(e) : null
-                                }} data-id={id}>Apagar</button>
+                            }} data-id={id}>Apagar</button>
                         </div>
                     </div>
                 ))}
