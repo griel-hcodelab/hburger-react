@@ -2,7 +2,10 @@
 
 # Custom
 package-lock.json
+yarn.lock
 
+#vscode
+/.vscode
 # dependencies
 /node_modules
 /.pnp

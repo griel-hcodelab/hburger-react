@@ -4,11 +4,14 @@ import LogoTextRed from '../../assets/images/logo-text-red.svg';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
+import { useAuth } from '../../Context/AuthContext';
 
 
 export const Header = () => {  
     const [ open, setIsOpen ] = useState(false);
 
+    const { user } = useAuth();
+    
     return (
         <header>
             <Link href="/">
@@ -21,23 +24,17 @@ export const Header = () => {
                 <Link href="/profile">
                     <a>Alterar Dados</a>
                 </Link>
+                <Link href="/addresses">
+                    <a>Seus Endereços</a>
+                </Link>
                 <Link href="/orders">
                     <a>Seus Pedidos</a>
-                </Link>
-                <Link href="/change-photo">
-                    <a>Mudar Foto</a>
                 </Link>
                 <Link href="/signout">
                     <a>Sair</a>
                 </Link>
             </div>
-            <img 
-                src="/images/default.png" 
-                alt="Avatar" 
-                className="avatar"
-                onClick={() => setIsOpen(!open)}
-            />
-            <small className="userName">Davi Matana</small>
+            <small onClick={() => setIsOpen(!open)} className="userName">{user?.name}</small>
         </header>
     )
 }

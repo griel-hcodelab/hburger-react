@@ -8,6 +8,7 @@ import { Title } from "../Title"
 import { Aditionals } from "./Aditionals";
 import styled from 'styled-components';
 import { useTrayItems } from "../../Context/TrayItemsContext";
+import { useAuth } from "../../Context/AuthContext";
 
 
 const H3 = styled.h3`
@@ -50,7 +51,6 @@ const CarteComponent = () => {
 			setBurger(selectedBurger)
 		}
 	},[selectedBurger])
-	
 
 	const clearBurger = () => {
 		setSelectedBurger(null)
@@ -82,8 +82,6 @@ const CarteComponent = () => {
 			})
 
 	}, []);
-
-
 
 	return (
 		<>
