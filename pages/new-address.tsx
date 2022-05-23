@@ -12,7 +12,7 @@ import { getZipcode } from "../utils/getZipcode";
 
 
 
-const ComponentPage: NextPage = () => {
+export default function NewAddressPage<NextPage>  (){
 
     const router = useRouter();
 
@@ -153,5 +153,5 @@ const ComponentPage: NextPage = () => {
 
 }
 
-export default ComponentPage;
+
 
