@@ -7,7 +7,8 @@
     "dev2": "next dev -p 3011",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "jest --watch"
   },
   "dependencies": {
     "axios": "0.26.1",
@@ -25,6 +26,10 @@
     "styled-components": "^5.3.5"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^5.16.4",
+    "@testing-library/react": "^13.2.0",
+    "@testing-library/user-event": "^14.2.0",
+    "@types/jest": "^27.5.1",
     "@types/lodash": "^4.14.182",
     "@types/node": "17.0.30",
     "@types/react": "18.0.8",
@@ -32,6 +37,8 @@
     "@types/styled-components": "^5.1.25",
     "eslint": "8.14.0",
     "eslint-config-next": "12.1.5",
+    "jest": "^28.1.0",
+    "jest-environment-jsdom": "^28.1.0",
     "typescript": "4.6.4"
   }
 }
