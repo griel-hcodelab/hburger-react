@@ -7,4 +7,5 @@ export type AuthContextType = {
   setToken: (token: string) => void;
   user: User | null;
   setUser: (user: User) => void;
+  logout: () => void;
 };

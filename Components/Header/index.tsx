@@ -10,7 +10,7 @@ import { useAuth } from '../../Context/AuthContext';
 export const Header = () => {  
     const [ open, setIsOpen ] = useState(false);
 
-    const { user } = useAuth();
+    const { user, logout } = useAuth();
     
     return (
         <header>
@@ -30,8 +30,8 @@ export const Header = () => {
                 <Link href="/orders">
                     <a>Seus Pedidos</a>
                 </Link>
-                <Link href="/signout">
-                    <a>Sair</a>
+                <Link href="#">
+                    <a onClick={logout}>Sair</a>
                 </Link>
             </div>
             <small onClick={() => setIsOpen(!open)} className="userName">{user?.name}</small>

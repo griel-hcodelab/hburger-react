@@ -19,6 +19,7 @@ const AuthContext = createContext<AuthContextType>({
   setToken: () => {},
   user: null,
   setUser: () => {},
+  logout: () => {},
 });
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
@@ -36,6 +37,16 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     const noAuthRoutes = ['/login', '/register', '/forget', '/reset'];
 
     return !noAuthRoutes.includes(route);
+  };
+
+  const logout = () => {
+
+    axios.get("/api/logout").then(() => {
+      setToken(null);
+      setUser(null);
+      router.push("/login");
+    });
+
   };
 
   const initAuth = () => {
@@ -65,6 +76,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         setToken,
         user,
         setUser,
+        logout,
       }}
     >
       {children}
