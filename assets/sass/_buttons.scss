@@ -21,3 +21,21 @@
         box-shadow: 0 0 10px var(--primary);
     }
 }
+
+.btnSearch {
+    width: 67px;
+    height: 67px;
+    padding: 10px;
+    position: absolute;
+    right: 1px;
+    top: 1px;
+    background-color: red;
+    fill: var(--white) !important;
+    border-radius: 10px 0 0 10px;
+    -moz-transform: scaleX(-1);
+    -o-transform: scaleX(-1);
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
+    cursor: pointer;
+    z-index: 5;
+}
