@@ -9,12 +9,13 @@ import { Title } from "../Components/Title";
 import { isCNPJ } from "../utils/isCNPJ";
 import { isCPF } from "../utils/isCPF";
 import { get } from 'lodash'
-import axios from "axios";
 import { useRouter } from "next/router";
 import { withIronSessionSsr } from "iron-session/next";
 import { sessionOptions } from "../utils/session";
 import { Order } from "../Types/Orders/OrderType";
 import { useAuth } from "../Context/AuthContext";
+import axios from "axios";
+import { Toast } from "../Components/Toast";
 
 type CarteType = {
     installments: number;
@@ -94,6 +95,9 @@ const ComponentPage: NextPage<ComponentPageProps> = ({ amount, orderId }) => {
     const [installmentOptions, setInstallmentOptions] = useState<InstallmentOptions[]>([])
     const [paymentMethodId, setPaymentMethodId] = useState('');
     const [paymentTypeId, setPaymentTypeId] = useState('');
+    const [toastType, setToastType] = useState<'success' | 'danger'>('danger');
+    const [toastIsOpen, setToastIsOpen] = useState(false);
+    const [toastError, setToastError] = useState('');
 
     const initMercadoPago = () => {
 
@@ -109,7 +113,7 @@ const ComponentPage: NextPage<ComponentPageProps> = ({ amount, orderId }) => {
                 setValue('number', '4235647728025682');
                 setValue('cardName', 'Fulano de Tal');
                 setValue('name', 'APRO');
-                setValue('expiry', format(addMonths(new Date(), 1), 'MM/yyyy'));
+                //setValue('expiry', format(addMonths(new Date(), 1), 'MM/yyyy'));
                 setValue('cvv', '123');
                 setValue('cardDocument', '12345678909');
             }
@@ -144,9 +148,6 @@ const ComponentPage: NextPage<ComponentPageProps> = ({ amount, orderId }) => {
                         value: cost.amount,
                         description: cost.recommended_message
                     })))
-
-
-
             }).catch((error: any) => {
                 console.log(error);
 
@@ -172,11 +173,6 @@ const ComponentPage: NextPage<ComponentPageProps> = ({ amount, orderId }) => {
     }, [bin, paymentMethodId])
 
     useEffect(() => {
-        console.log(errors);
-
-    }, [errors])
-
-    useEffect(() => {
 
         const script: HTMLScriptElement = document.createElement('script');
         script.src = 'https://sdk.mercadopago.com/js/v2';
@@ -187,9 +183,18 @@ const ComponentPage: NextPage<ComponentPageProps> = ({ amount, orderId }) => {
 
     const onSubmit: SubmitHandler<FormData> = async (data) => {
 
-
+        if(!expiry){
+            console.log(expiry);
+            setError('expiry', {
+                message: 'Data de validade inválida'
+            })
+            return;
+        }
+        
+    
         const expirtyMonth = Number(expiry.split('/')[0]);
         const expirtyYear = Number(expiry.split('/')[1]);
+        
 
         if (expirtyMonth < 0 && expirtyMonth > 12) {
             setError('expiry', {
@@ -227,22 +232,44 @@ const ComponentPage: NextPage<ComponentPageProps> = ({ amount, orderId }) => {
         }
 
         try {
-            await axios.patch(`${process.env.API_URL}/orders/${orderId}`,  {
+            await axios.patch(`${process.env.API_URL}/orders/${orderId}`, {
                 payment_situation_id: 3,
             },
-            {
-                headers: {
-                    authorization: `Bearer ${token}`,
-                },
-            });
+                {
+                    headers: {
+                        authorization: `Bearer ${token}`,
+                    },
+                });
 
-            router.push(`/orders`); 
+            router.push(`/orders`);
         }
         catch (error: any) {
-            console.error(error.message)
-        }   
+            showErrorToast(error.message)
+        }
 
     }
+
+    useEffect(() => {
+        if (Object.keys(errors).length) {
+            showErrorToast(
+                Object.values(errors)[0].message ||
+                'Verifique o endereço e tente novamente.',
+            );
+        } else {
+            setToastIsOpen(false);
+        }
+    }, [errors]);
+
+    const showErrorToast = (message: string) => {
+        setToastError(message);
+        setToastType('danger');
+        setToastIsOpen(true);
+
+        setTimeout(() => {
+            setToastIsOpen(false);
+            clearErrors();
+        }, 5000);
+    };
 
     return (
         <section>
@@ -275,8 +302,11 @@ const ComponentPage: NextPage<ComponentPageProps> = ({ amount, orderId }) => {
                             <div className="field">
                                 <IMaskInput
                                     mask={'00/0000'}
-                                    unmask={false}
+                                    unmask={true}
                                     value={expiry}
+                                    // {...register('expiry', {
+                                    //     required: "Preencha a data de validade corretamente"
+                                    // })}
                                     placeholder={'(ex:MM/AAAA)'}
                                     onAccept={(value) => setValue('expiry', String(value))}
                                 />
@@ -289,15 +319,15 @@ const ComponentPage: NextPage<ComponentPageProps> = ({ amount, orderId }) => {
                                     value={cvv}
                                     onAccept={(value) => setValue('cvv', String(value))}
                                 />
-                                <label htmlFor="expiry">Código de Segurança</label>
+                                <label htmlFor="cvv">Código de Segurança</label>
                             </div>
                         </div>
 
                         <div className="field">
-                            <input type="text" id="card-name" placeholder="Digite o nome impresso no cartão" {...register('name', {
+                            <input type="text" id="name" placeholder="Digite o nome impresso no cartão" {...register('name', {
                                 required: 'Digite o nome impresso no cartão.'
                             })} />
-                            <label htmlFor="expiry">Nome Titular Cartão</label>
+                            <label htmlFor="name">Nome Titular Cartão</label>
                         </div>
 
                         {issuers.length > 1 && <div className="field">
@@ -337,12 +367,9 @@ const ComponentPage: NextPage<ComponentPageProps> = ({ amount, orderId }) => {
                             <label htmlFor="card-document">CPF ou CNPJ do Titular do Cartão</label>
                         </div>
 
-
-                        <div id="alert">
-                            {Object.keys(errors).map((error) => (
-                                get(error, `${error}.message`, 'Verifique os dados selecionados')
-                            ))}
-                        </div>
+                        <Toast type={toastType} open={toastIsOpen}>
+                            <p>{toastError}</p>
+                        </Toast>
                         <footer>
                             <button type="submit" id="paymentBtn">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
