@@ -92,9 +92,8 @@ const ComponentPage: NextPage<ComponentPageProps> = ({ amount, orderId }) => {
     const cardDocument = watch("cardDocument")
     const [issuers, setIssuers] = useState<Issuer[]>([])
     const [installmentOptions, setInstallmentOptions] = useState<InstallmentOptions[]>([])
-    const [paymentMethodId, setPaymentMethodId] = useState('')
-    const [paymentTypeId, setPaymentTypeId] = useState('')
-    const [payment, setPayment] = useState<number>(2);
+    const [paymentMethodId, setPaymentMethodId] = useState('');
+    const [paymentTypeId, setPaymentTypeId] = useState('');
 
     const initMercadoPago = () => {
 
@@ -109,7 +108,7 @@ const ComponentPage: NextPage<ComponentPageProps> = ({ amount, orderId }) => {
             if (mp) {
                 setValue('number', '4235647728025682');
                 setValue('cardName', 'Fulano de Tal');
-                setValue('name', 'SECU');
+                setValue('name', 'APRO');
                 setValue('expiry', format(addMonths(new Date(), 1), 'MM/yyyy'));
                 setValue('cvv', '123');
                 setValue('cardDocument', '12345678909');
@@ -186,17 +185,7 @@ const ComponentPage: NextPage<ComponentPageProps> = ({ amount, orderId }) => {
         document.body.appendChild(script)
     }, [])
 
-    const createPayment = (data: CarteType) => {
-        axios.post('/api/payment', data).then(() => {
-            router.push(`/orders`)
-        }).catch((error) => {
-            setError('server', {
-                message: error.message
-            })
-        })
-    }
-
-    const onSubmit: SubmitHandler<FormData> = (data) => {
+    const onSubmit: SubmitHandler<FormData> = async (data) => {
 
 
         const expirtyMonth = Number(expiry.split('/')[0]);
@@ -237,75 +226,21 @@ const ComponentPage: NextPage<ComponentPageProps> = ({ amount, orderId }) => {
             return;
         }
 
-
-        mp.createCardToken({
-            cardNumber: number,
-            cardholderName: name,
-            cardExpirationMonth: expiry.split('/')[0],
-            cardExpirationYear: expiry.split('/')[1],
-            securityCode: cvv,
-            identificationType: cardDocument.length === 11 ? 'CPF' : 'CNPJ',
-            identificationNumber: cardDocument,
-        }).then((response: any) => {
-            let situationPayment = response.cardholder.name
-            
-
-
-            switch (situationPayment) {
-                case "APRO":
-                    setPayment(3);
-                    break;
-                case "SECU":
-                    setPayment(4);
-                    break;
-                case "OTHE":
-                    setPayment(4);
-                    break;
-                default:
-                    setPayment(2);
-                    break;
-            }
-
-            createPayment({
-                cardToken: response.id,
-                document: cardDocument,
-                cardName,
-                installments: Number(installments),
-                paymentMethod: paymentMethodId,
-                cardFirstSixDigits: response.first_six_digits,
-                cardLastFourDigits: response.last_four_digits,
-                situationPayment: cardName,
-                paymentTypeId,
-            })
-        }).then(async () => { 
-            
-            console.log(token);
-
-            await axios.patch(`${process.env.API_URL}/orders/${orderId}`, {
+        try {
+            await axios.patch(`${process.env.API_URL}/orders/${orderId}`,  {
+                payment_situation_id: 3,
+            },
+            {
                 headers: {
                     authorization: `Bearer ${token}`,
                 },
-                body: {
-                    payment_situation_id: payment,
-                }
-            }).catch((e) => {
-                console.log('server', e.messge);
-            });
-        }).catch((error: any) => {
-            setError('token', {
-                message: error.message
             });
 
-        })
-
-        // mp.payment.save(req.body)
-        // .then(function (response) {
-        //     const { status, status_detail, id } = response.body;
-        //     res.status(response.status).json({ status, status_detail, id });
-        // })
-        // .catch(function (error) {
-        //     console.error(error);
-        // });
+            router.push(`/orders`); 
+        }
+        catch (error: any) {
+            console.error(error.message)
+        }   
 
     }
 
@@ -359,7 +294,7 @@ const ComponentPage: NextPage<ComponentPageProps> = ({ amount, orderId }) => {
                         </div>
 
                         <div className="field">
-                            <input type="text" id="card-name" placeholder="Digite o nome impresso no cartão" {...register('cardName', {
+                            <input type="text" id="card-name" placeholder="Digite o nome impresso no cartão" {...register('name', {
                                 required: 'Digite o nome impresso no cartão.'
                             })} />
                             <label htmlFor="expiry">Nome Titular Cartão</label>
