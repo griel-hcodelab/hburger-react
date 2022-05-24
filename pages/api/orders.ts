@@ -12,9 +12,6 @@ export default withIronSessionApiRoute(async function (req: NextApiRequest, res:
       },
     });
 
-    console.log(data);
-    
-
     res.status(200).json(data);
 
   } catch (e: any) {

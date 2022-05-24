@@ -85,8 +85,6 @@ const ComponentPage: NextPage<ComponentPageProps> = () => {
 
     const onSubmit: SubmitHandler<FormData> = async (data) => {
 
-        console.log('form', data)
-
         await axios.patch<User>(`/api/profile`, {
             body: data
         }).then(({ data }) => {
