@@ -44,41 +44,43 @@ const ComponentPage: NextPage<ComponentPageProps> = () => {
     const getUserData = async () => {
 
         await axios.get('/api/profile')
-        .then(({data})=>{
+            .then(({ data }) => {
 
-            const userFromDB = {
-                name: data.Person[0].name,
-                birth_at: new Date(data.Person[0].birthAt).toISOString().split('T')[0].split('-').reverse().join('/'),
-                document: data.Person[0].document,
-                phone: data.Person[0].phone,
-            }
+                const userFromDB = {
+                    name: data.Person[0].name,
+                    birth_at: new Date(data.Person[0].birthAt).toISOString().split('T')[0].split('-').reverse().join('/'),
+                    document: data.Person[0].document,
+                    phone: data.Person[0].phone,
+                }
 
-            setUserData(userFromDB)
-        })
+                setUserData(userFromDB)
+            })
 
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         getUserData()
-    },[])
+    }, [])
 
-    useEffect(()=>{
+    useEffect(() => {
         setValue("name", userData?.name);
         setValue("birth_at", userData?.birth_at);
         setValue("document", userData?.document);
         setValue("phone", userData?.phone);
-        
-    },[userData])
+
+    }, [userData])
 
     const [formIsLoading, setFormIsLoading] = useState(false);
     const [toastType, setToastType] = useState<'success' | 'danger'>('danger');
     const [toastIsOpen, setToastOpen] = useState(false);
     const [error, setError] = useState('');
 
-    const { register, handleSubmit, formState: { errors }, clearErrors, setValue } = useForm<FormData>({
+    const { register, handleSubmit, formState: { errors }, clearErrors, setValue, watch } = useForm<FormData>({
         defaultValues: {
             name: userData.name,
             birth_at: userData.birth_at ? userData.birth_at.substring(0, 10) : '',
+            document: userData.document,
+            phone: userData.phone
 
         }
     });
@@ -113,71 +115,78 @@ const ComponentPage: NextPage<ComponentPageProps> = () => {
         }
 
     }, [errors]);
-    
-    
+
+
     return (
         <>
             <MetaTitle title="Meus Dados :: HBurger" />
-                <section>
-                    <Header />
-                    <main>
-                        <header className="page-title">
-                            <h1>Dados <span>Pessoais</span></h1>
-                        </header>
-                        <form id="address-profile" onSubmit={handleSubmit(onSubmit)}>
+            <section>
+                <Header />
+                <main>
+                    <header className="page-title">
+                        <h1>Dados <span>Pessoais</span></h1>
+                    </header>
+                    <form id="address-profile" onSubmit={handleSubmit(onSubmit)}>
+                        <div className="field">
+                            <input
+                                type="text"
+                                id="name"
+                                {...register("name", {
+                                    required: "O campo nome é obrigatório."
+                                })}
+                            />
+                            <label htmlFor="name">Nome Completo</label>
+                        </div>
+                        <div className="field">
+                            <IMaskInput mask={'00/00/0000'}
+                                type="text"
+                                id="birth_at"
+                                {...register("birth_at")}
+                                defaultValue={userData.birth_at}
+                                onAccept={(value) => setValue('birth_at', String(value))}
+                            />
+                            <label htmlFor="birth_at">Data de Nascimento</label>
+                        </div>
+                        <div className="fields">
                             <div className="field">
-                                <input 
+                                <IMaskInput mask={'000.000.000-00'}
                                     type="text"
-                                    id="name"
-                                    {...register("name", {
-                                        required: "O campo nome é obrigatório."
-                                    })} 
+                                    id="document"
+                                    {...register("document")}
+                                    defaultValue={userData.document}
+                                    onAccept={(value) => setValue('document', String(value))}
+
                                 />
-                                <label htmlFor="name">Nome Completo</label>
+                                <label htmlFor="document">CPF</label>
                             </div>
                             <div className="field">
-                                <IMaskInput mask={'00/00/0000'}  defaultValue={userData.birth_at}
+                                <IMaskInput mask={'(00) 00000-0000'}
                                     type="text"
-                                    id="birth_at" 
-                                    {...register("birth_at")} 
+                                    id="phone"
+                                    {...register("phone")}
+                                    defaultValue={userData.phone}
+                                    onAccept={(value) => setValue('phone', String(value))}
                                 />
-                                <label htmlFor="birth_at">Data de Nascimento</label>
+                                <label htmlFor="phone">Telefone</label>
                             </div>
-                            <div className="fields">
-                                <div className="field">
-                                    <IMaskInput mask={'000.000.000-00'} defaultValue={userData.document}
-                                        type="text"
-                                        id="document" 
-                                        {...register("document")}
-                                    />
-                                    <label htmlFor="document">CPF</label>
-                                </div>
-                                <div className="field">
-                                    <IMaskInput mask={'(00) 00000-0000'} defaultValue={userData.phone} 
-                                        type="text"
-                                        id="phone" 
-                                        {...register("phone")}
-                                    />
-                                    <label htmlFor="phone">Telefone</label>
-                                </div>
-                            </div>
-                            <Toast type={toastType} open={toastIsOpen}>
-                                <p>{error}</p>
-                            </Toast>
-                            <footer>
-                            <button 
-                                type="submit" 
+                        </div>
+                        <Toast type={toastType} open={toastIsOpen}>
+                            <p>{error}</p>
+                        </Toast>
+                        <footer>
+                            <button
+                                type="submit"
                                 disabled={formIsLoading}
                             >
                                 {formIsLoading ? 'Salvando' : 'Salvar'}
                             </button>
-                            </footer>
-                            <Link href="/">
-                                <a className="btnBack">VOLTAR</a>
-                            </Link>
-                        </form>
-                    </main>
-                </section>
+                        </footer>
+                        <Link href="/">
+                            <a className="btnBack">VOLTAR</a>
+                        </Link>
+                    </form>
+                </main>
+            </section>
         </>
     );
 }
