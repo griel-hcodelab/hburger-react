@@ -13,14 +13,20 @@ import { MeResponse } from "../Types/Auth/MeResponse";
 import { redirectToAuth } from "../utils/redirectToAuth";
 import { withAuthentication } from "../utils/withAuthentication";
 import { User } from "../Types/Auth/User";
+import { IMaskInput } from "react-imask";
 
 type FormData = {
-    name: string;
-    email: string;
+    name: string | undefined;
+    birth_at?: string | undefined;
+    document?: string | undefined;
+    phone?: string | undefined;
+}
+
+type userData = {
+    name?: string;
     birth_at?: string;
-    document?: number;
-    phone?: number;
-    server?: string;
+    document?: string;
+    phone?: string;
 }
 
 type ComponentPageProps = {
@@ -28,46 +34,70 @@ type ComponentPageProps = {
     user: User;
 }
 
-const ComponentPage: NextPage<ComponentPageProps> = ({ token, user }) => {
+const ComponentPage: NextPage<ComponentPageProps> = () => {
+
+    const [userData, setUserData] = useState<userData>({});
+    const { token, initAuth } = useAuth();
+
+    const router = useRouter()
+
+    const getUserData = async () => {
+
+        await axios.get('/api/profile')
+        .then(({data})=>{
+
+            const userFromDB = {
+                name: data.Person[0].name,
+                birth_at: new Date(data.Person[0].birthAt).toISOString().split('T')[0].split('-').reverse().join('/'),
+                document: data.Person[0].document,
+                phone: data.Person[0].phone,
+            }
+
+            setUserData(userFromDB)
+        })
+
+    }
+
+    useEffect(()=>{
+        getUserData()
+    },[])
+
+    useEffect(()=>{
+        setValue("name", userData?.name);
+        setValue("birth_at", userData?.birth_at);
+        setValue("document", userData?.document);
+        setValue("phone", userData?.phone);
+        
+    },[userData])
 
     const [formIsLoading, setFormIsLoading] = useState(false);
     const [toastType, setToastType] = useState<'success' | 'danger'>('danger');
     const [toastIsOpen, setToastOpen] = useState(false);
     const [error, setError] = useState('');
 
-    const { user: contextUser, setUser } = useAuth();
-
-    const { register, handleSubmit, formState: { errors }, clearErrors } = useForm<FormData>({
+    const { register, handleSubmit, formState: { errors }, clearErrors, setValue } = useForm<FormData>({
         defaultValues: {
-            name: user.name,
-            email: user.email,
-            birth_at: user.birthAt ? user.birthAt.substring(0, 10) : '',
+            name: userData.name,
+            birth_at: userData.birth_at ? userData.birth_at.substring(0, 10) : '',
+
         }
     });
 
-    const showErrorToast = (message: string) => {
-        setError(message);
-        setToastType('danger');
-        setToastOpen(true);
-    
-        setTimeout(() => {
-          setToastOpen(false);
-        }, 5000);
-      };
+    const onSubmit: SubmitHandler<FormData> = async (data) => {
 
-    const onSubmit: SubmitHandler<FormData> = (data) => {
-        axios.patch<User>(`/login`, data, {
-            baseURL: process.env.API_URL,
-            headers: {
-                Authorization: `Bearer ${token}`,
-            }
+        console.log('form', data)
+
+        await axios.patch<User>(`/api/profile`, {
+            body: data
         }).then(({ data }) => {
-            setUser(data);
             setToastType('success');
+            setError('Dados atualizados com sucesso. Você irá ser redirecionado para a página inicial.');
             setToastOpen(true);
+            initAuth();
             setTimeout(() => {
                 setToastOpen(false);
-            }, 3000);
+                router.push('/');
+            }, 5000);
         }).catch((e) => {
             setToastType('danger');
             setError('server');
@@ -108,7 +138,7 @@ const ComponentPage: NextPage<ComponentPageProps> = ({ token, user }) => {
                                 <label htmlFor="name">Nome Completo</label>
                             </div>
                             <div className="field">
-                                <input 
+                                <IMaskInput mask={'00/00/0000'}  defaultValue={userData.birth_at}
                                     type="text"
                                     id="birth_at" 
                                     {...register("birth_at")} 
@@ -117,7 +147,7 @@ const ComponentPage: NextPage<ComponentPageProps> = ({ token, user }) => {
                             </div>
                             <div className="fields">
                                 <div className="field">
-                                    <input 
+                                    <IMaskInput mask={'000.000.000-00'} defaultValue={userData.document}
                                         type="text"
                                         id="document" 
                                         {...register("document")}
@@ -125,7 +155,7 @@ const ComponentPage: NextPage<ComponentPageProps> = ({ token, user }) => {
                                     <label htmlFor="document">CPF</label>
                                 </div>
                                 <div className="field">
-                                    <input 
+                                    <IMaskInput mask={'(00) 00000-0000'} defaultValue={userData.phone} 
                                         type="text"
                                         id="phone" 
                                         {...register("phone")}
@@ -156,25 +186,3 @@ const ComponentPage: NextPage<ComponentPageProps> = ({ token, user }) => {
 
 export default ComponentPage;
 
-export const getServerSideProps = withAuthentication(async (context) => {
-
-    try {
-
-        const { token } = context.req.session;
-
-        const { data: user } = await axios.get<MeResponse>('/auth/me', {
-            baseURL: process.env.API_URL,
-            headers: {
-                Authorization: `Bearer ${token}`,
-            }
-        })
-
-        return {
-            props: { token, user }
-        }
-
-    } catch (e) {
-        return redirectToAuth(context);
-    }
-
-});
