@@ -1,72 +1,79 @@
-import axios from "axios";
-import { GetServerSidePropsContext, NextPage } from "next";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { IMaskInput } from "react-imask";
-import { Header } from "../../Components/Header";
-import { MetaTitle } from "../../Components/Header/MetaTitle";
-import AuthContext from '../../Context/AuthContext'
-import { TypeAddresses } from "../../Types/Addresses";
-import { getZipcode } from "../../utils/getZipcode";
+import axios from 'axios';
+import { GetServerSidePropsContext, NextPage } from 'next';
+import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { IMaskInput } from 'react-imask';
+import { Header } from '../../Components/Header';
+import { MetaTitle } from '../../Components/Header/MetaTitle';
+import { Toast } from '../../Components/Toast';
+import AuthContext from '../../Context/AuthContext';
+import { TypeAddresses } from '../../Types/Addresses';
+import { getZipcode } from '../../utils/getZipcode';
 
 type SlugProps = {
-
-    slug: string
-
-}
+    slug: string;
+};
 
 const ComponentPage: NextPage<SlugProps> = ({ slug }) => {
-
     const router = useRouter();
 
     const [address, setAddress] = useState<TypeAddresses>();
+    const [toastType, setToastType] = useState<'success' | 'danger'>('danger');
+    const [toastIsOpen, setToastIsOpen] = useState(false);
+    const [toastError, setToastError] = useState('');
 
     const zipcode = async (e: string) => {
-
         const result = await getZipcode(e);
 
-        setAddress(result)
-    }
+        setAddress(result);
+    };
 
     const getAddressData = async () => {
-        await axios.post('/api/update-address', {
-            body: {
-                id: slug
-            }
-        })
-            .then(({ data }) => {
-                setAddress(data)
-                setAddressData(data)
-
+        await axios
+            .post('/api/update-address', {
+                body: {
+                    id: slug,
+                },
             })
-    }
+            .then(({ data }) => {
+                setAddress(data);
+                setAddressData(data);
+            });
+    };
 
     const setAddressData = (address: TypeAddresses) => {
-
-        if (address.zipcode){
-            setValue("zipcode", address?.zipcode.replace('-', '').replace('.', ''));
+        if (address.zipcode) {
+            setValue(
+                'zipcode',
+                address?.zipcode.replace('-', '').replace('.', ''),
+            );
         }
 
-        setValue("street", address?.street);
-        setValue("number", address?.number);
-        setValue("complement", address?.complement);
-        setValue("district", address?.district);
-        setValue("city", address?.city);
-        setValue("state", address?.state);
-    }
+        setValue('street', address?.street);
+        setValue('number', address?.number);
+        setValue('complement', address?.complement);
+        setValue('district', address?.district);
+        setValue('city', address?.city);
+        setValue('state', address?.state);
+    };
 
     useEffect(() => {
-        getAddressData()
-    }, [])
+        getAddressData();
+    }, []);
 
     useEffect(() => {
         if (address) {
-            setAddressData(address)
+            setAddressData(address);
         }
-    }, [address])
+    }, [address]);
 
-    const { register, handleSubmit, getValues, setValue } = useForm<TypeAddresses>({
+    const {
+        register,
+        handleSubmit,
+        setValue,
+        formState: { errors },
+    } = useForm<TypeAddresses>({
         defaultValues: {
             zipcode: address?.zipcode,
             street: address?.street,
@@ -75,25 +82,44 @@ const ComponentPage: NextPage<SlugProps> = ({ slug }) => {
             district: address?.district,
             city: address?.city,
             state: address?.state,
-        }
-    })
+        },
+    });
 
     const onSubmit: SubmitHandler<TypeAddresses> = async (data) => {
-
         data.id = Number(slug);
 
-        await axios.patch(`/api/update-address`, {
-            body: data
-        })
-        .then(({data})=>{
-            router.push("/addresses")
-        })
-        .catch((e:any)=>{
-            console.log(e.message)
-        }) 
+        await axios
+            .patch(`/api/update-address`, {
+                body: data,
+            })
+            .then(({ data }) => {
+                router.push('/addresses');
+            })
+            .catch((e: any) => {
+                showErrorToast(e.message);
+            });
+    };
 
+    useEffect(() => {
+        if (Object.keys(errors).length) {
+            showErrorToast(
+                Object.values(errors)[0].message ||
+                    'Verifique o endereço e tente novamente.',
+            );
+        } else {
+            setToastIsOpen(false);
+        }
+    }, [errors]);
 
-    }
+    const showErrorToast = (message: string) => {
+        setToastError(message);
+        setToastType('danger');
+        setToastIsOpen(true);
+
+        setTimeout(() => {
+            setToastIsOpen(false);
+        }, 5000);
+    };
 
     return (
         <>
@@ -105,91 +131,119 @@ const ComponentPage: NextPage<SlugProps> = ({ slug }) => {
                     <main>
                         <form onSubmit={handleSubmit(onSubmit)}>
                             <div className="field">
-                                <IMaskInput id="zipcode" defaultValue={address?.zipcode} mask={'00.000-000'} {...register('zipcode', {
-                                    required: 'Por favor, informe seu CEP',
-                                })} onBlur={async (e) => { await zipcode(e.target.value) }} />
+                                <IMaskInput
+                                    id="zipcode"
+                                    defaultValue={address?.zipcode}
+                                    mask={'00.000-000'}
+                                    {...register('zipcode', {
+                                        required: 'Por favor, informe seu CEP',
+                                    })}
+                                    onBlur={async (e) => {
+                                        await zipcode(e.target.value);
+                                    }}
+                                />
                                 <label htmlFor="zipcode">CEP</label>
                             </div>
 
                             <div className="field">
-                                <input type="text" id="address" {...register('street', {
-                                    required: 'Por favor, informe seu endereço',
-                                    value: address?.street
-                                })} defaultValue={address?.street} />
+                                <input
+                                    type="text"
+                                    id="address"
+                                    {...register('street', {
+                                        required:
+                                            'Por favor, informe seu endereço',
+                                        value: address?.street,
+                                    })}
+                                    defaultValue={address?.street}
+                                />
                                 <label htmlFor="address">Endereço</label>
                             </div>
 
                             <div className="field">
-                                <input type="text" id="number" {...register('number')} defaultValue={address?.number} />
+                                <input
+                                    type="text"
+                                    id="number"
+                                    {...register('number')}
+                                    defaultValue={address?.number}
+                                />
                                 <label htmlFor="number">Número</label>
                             </div>
 
                             <div className="field">
-                                <input type="text" id="district" {...register('district', {
-                                    required: 'Por favor, informe seu bairro',
-                                })} defaultValue={address?.district} />
+                                <input
+                                    type="text"
+                                    id="district"
+                                    {...register('district', {
+                                        required:
+                                            'Por favor, informe seu bairro',
+                                    })}
+                                    defaultValue={address?.district}
+                                />
                                 <label htmlFor="district">Bairro</label>
                             </div>
 
                             <div className="fields">
-
                                 <div className="field">
-                                    <input type="text" id="city" {...register('city', {
-                                        required: 'Por favor, informe sua cidade',
-                                    })} defaultValue={address?.city} />
+                                    <input
+                                        type="text"
+                                        id="city"
+                                        {...register('city', {
+                                            required:
+                                                'Por favor, informe sua cidade',
+                                        })}
+                                        defaultValue={address?.city}
+                                    />
                                     <label htmlFor="city">Cidade</label>
                                 </div>
 
                                 <div className="field">
-                                    <input type="text" id="state" {...register('state', {
-                                        required: 'Por favor, informe seu estado',
-                                    })} defaultValue={address?.state} />
+                                    <input
+                                        type="text"
+                                        id="state"
+                                        {...register('state', {
+                                            required:
+                                                'Por favor, informe seu estado',
+                                        })}
+                                        defaultValue={address?.state}
+                                    />
                                     <label htmlFor="state">Estado</label>
                                 </div>
-
                             </div>
 
                             <div id="alert"></div>
 
                             <footer>
-
                                 <button type="submit">Salvar</button>
-
                             </footer>
-
                         </form>
                     </main>
                 </section>
-
+                <Toast type={toastType} open={toastIsOpen}>
+                    <p>{toastError}</p>
+                </Toast>
             </AuthContext>
         </>
-    )
-
-}
+    );
+};
 
 export default ComponentPage;
 
-
-export function getServerSideProps({ params }: GetServerSidePropsContext<SlugProps>) {
-
+export function getServerSideProps({
+    params,
+}: GetServerSidePropsContext<SlugProps>) {
     if (params) {
-
         const { slug } = params;
 
         return {
             props: {
-                slug
-            }
-        }
-
+                slug,
+            },
+        };
     } else {
         return {
             redirect: {
-                destination: '/addresses'
-            }
-        }
+                destination: '/addresses',
+            },
+        };
     }
-
-
-
 }
