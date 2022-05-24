@@ -27,7 +27,9 @@ export const AddressWidgetComponent = () => {
     return (
         <>
         <p className={styles.select_address_p}>Escolha seu endereço de entrega</p>
-        <select data-testid="option" name="addresses" id="addresses" className={styles.select_address} onChange={handleAddress}>{
+        <select data-testid="option" name="addresses" id="addresses" className={styles.select_address} onChange={handleAddress}>
+        <option value="0">Escolha seu endereço de entrega</option>
+            {
             addressList.map(({ id, street }) => (
                 <option  key={id} value={id}>{street}</option>
             ))
