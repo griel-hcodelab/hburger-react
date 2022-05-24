@@ -21,16 +21,6 @@ export const OrderCard = ({ order, onCancel } : OrderCardProps) => {
     return `${format(new Date(order.createdAt), 'yyyyMMdd')}${String(order.id).padStart(4, '0')}`;
   };
 
-  const getPaymentSituationName = () => {
-    axios.get(`payment-situations/${order.payment_situation_id}`, {
-      baseURL: process.env.API_URL,
-    })
-    .then((response) => {
-      setPaymentSituationName(response.data.name);
-      setCanDeleteOrder([1, 2, 3, 4, 5].includes(order.payment_situation_id));
-    });
-  };
-
   const cancelOrder = () => {
     axios.delete(`/orders/${order.id}`, {
       baseURL: process.env.API_URL,
@@ -45,7 +35,9 @@ export const OrderCard = ({ order, onCancel } : OrderCardProps) => {
     .finally(() => setShowAlert(false));
   };
 
-  useEffect(getPaymentSituationName, [order]);
+  useEffect(() => {
+    setCanDeleteOrder([1, 2, 3, 4, 5].includes(order.payment_situation_id));
+  }, [order]);
 
   return (
     <li className={showAlert ? 'show-confirm' : ''}>
@@ -70,7 +62,7 @@ export const OrderCard = ({ order, onCancel } : OrderCardProps) => {
           </li>
           <li>
             <span>Status:</span>
-            <span>{paymentSituationName}</span>
+            <span>{order.paymentSituationName}</span>
           </li>
           <li>
             <span>Valor:</span>

@@ -5,17 +5,35 @@ import Button from "../Components/Button";
 import { Header } from "../Components/Header"
 import { MetaTitle } from "../Components/Header/MetaTitle";
 import { Title } from "../Components/Title";
-import { format } from "date-fns";
 import { OrderCard } from "../Components/Order/Card";
 import { Order } from "../Types/Orders/OrderType";
+
+type PaymentSituation = {
+  id: number;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+}
 
 const Orders: NextPage = () => {
   const [orders, setOrders] = useState<Order[]>([]);
 
+  const getPaymentSituationName = (id: number, paymentSituations: PaymentSituation[]) => {    
+    return paymentSituations.find((situation) => situation.id === id)?.name;
+  }
+
   const getOrders = () => {
     axios.get('/api/orders')
-    .then((response) => {
-      setOrders(response.data);
+    .then(async ({ data: orders }) => {
+
+      const { data } = await axios.get('/payment-situations', {
+        baseURL: process.env.API_URL,
+      });      
+
+      setOrders(orders.map((order: Order) => ({
+        ...order,
+        paymentSituationName: getPaymentSituationName(order.payment_situation_id, data)
+      })));
     });
   };
 
