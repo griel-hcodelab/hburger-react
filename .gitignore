@@ -2,7 +2,10 @@
 
 # Custom
 package-lock.json
+yarn.lock
 
+#vscode
+/.vscode
 # dependencies
 /node_modules
 /.pnp
@@ -30,7 +33,6 @@ yarn-error.log*
 
 # local env files
 .env*.local
-.env
 
 # vercel
 .vercel

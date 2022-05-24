@@ -8,6 +8,7 @@ import { Title } from "../Title"
 import { Aditionals } from "./Aditionals";
 import styled from 'styled-components';
 import { useTrayItems } from "../../Context/TrayItemsContext";
+import { useAuth } from "../../Context/AuthContext";
 
 
 const H3 = styled.h3`
@@ -20,12 +21,6 @@ type selectedBurger = {
 	name: string;
 	price: number;
 }
-
-/**
- * @todo: salvar lanche, voltar pra fazer outro
- * @todo: adicionar ingredientes na bandeja somente após salvar o lanche
- * 
- */
 
 const CarteComponent = () => {
 
@@ -56,7 +51,6 @@ const CarteComponent = () => {
 			setBurger(selectedBurger)
 		}
 	},[selectedBurger])
-	
 
 	const clearBurger = () => {
 		setSelectedBurger(null)
@@ -88,8 +82,6 @@ const CarteComponent = () => {
 			})
 
 	}, []);
-
-
 
 	return (
 		<>

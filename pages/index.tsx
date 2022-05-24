@@ -5,6 +5,7 @@ import Carte from '../Components/Carte'
 import { Header } from '../Components/Header'
 import { MetaTitle } from '../Components/Header/MetaTitle'
 import TrayContext from '../Context/TrayContext'
+import AuthContext from '../Context/AuthContext'
 import TrayItemsContext, { useTrayItems } from '../Context/TrayItemsContext'
 
 const ComponentPage: NextPage = () => {

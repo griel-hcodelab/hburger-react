@@ -1,44 +1,40 @@
+import LogoRed from '../../assets/images/logo-icon-red.svg';
+import LogoTextRed from '../../assets/images/logo-text-red.svg';
+
+import Image from 'next/image';
 import Link from 'next/link';
+import { useState } from 'react';
+import { useAuth } from '../../Context/AuthContext';
 
-export const Header = () => {
-    const menuOpen = "show";
 
+export const Header = () => {  
+    const [ open, setIsOpen ] = useState(false);
+
+    const { user } = useAuth();
+    
     return (
         <header>
             <Link href="/">
                 <a>
-                    <img 
-                        src="/images/logo-icon-red.svg" 
-                        alt="Logo Icone" 
-                        id="logo-icon" 
-                    />
-                    <img 
-                        src="/images/logo-text-red.svg" 
-                        alt="Logo Texto" 
-                        id="logo-text" 
-                    />
+                    <Image src={LogoRed} alt="Logo Icone" id="logo-icon" />
+                    <Image src={LogoTextRed} alt="Logo Texto" id="logo-text" />
                 </a>
             </Link>
-            <div className="profileMenu">
+            <div className={["profileMenu", open ? "show" : ""].join(" ")}>
                 <Link href="/profile">
                     <a>Alterar Dados</a>
                 </Link>
+                <Link href="/addresses">
+                    <a>Seus Endereços</a>
+                </Link>
                 <Link href="/orders">
                     <a>Seus Pedidos</a>
-                </Link>
-                <Link href="/change-photo">
-                    <a>Mudar Foto</a>
                 </Link>
                 <Link href="/signout">
                     <a>Sair</a>
                 </Link>
             </div>
-            <img 
-                src="/images/default.png" 
-                alt="Avatar" 
-                className="avatar" 
-            />
-            <small className="userName">Davi Matana</small>
+            <small onClick={() => setIsOpen(!open)} className="userName">{user?.name}</small>
         </header>
     )
 }

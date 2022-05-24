@@ -1,5 +1,6 @@
 import { IronSessionOptions } from 'iron-session';
 import { User } from '../Types/Auth/User';
+import { CarteType } from '../Types/CarteType';
 
 export const sessionOptions: IronSessionOptions = {
   cookieName: 'ferrari-hcodelab/iron-session',
@@ -13,5 +14,6 @@ declare module 'iron-session' {
   interface IronSessionData {
     token: string;
     user: User;
+    order: CarteType;
   }
 }

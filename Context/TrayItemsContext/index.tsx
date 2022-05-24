@@ -12,11 +12,13 @@ type TrayItemsTypesProps = {
     setAditional: (aditional: TrayItemsTypes[]) => void,
     sendBurgerToTray: () => void,
     removeBurger: (e:any) => void,
+    setAddress: (address: number) => void,
 
     aditional: TrayItemsTypes[],
     subTotal: number,
     total: number,
     trayItems: TrayItems[],
+    address: number
 
 }
 
@@ -26,11 +28,13 @@ const TrayItemsContext = createContext<TrayItemsTypesProps>({
     setAditional: () => { },
     sendBurgerToTray: () => { },
     removeBurger: () => { },
+    setAddress: () => { },
 
     aditional: [],
     subTotal: 0,
     total: 0,
     trayItems: [],
+    address: 0
 });
 
 export default function TrayItemsProvider({ children }: { children: ReactNode }) {
@@ -40,6 +44,7 @@ export default function TrayItemsProvider({ children }: { children: ReactNode })
     const [subTotal, setSubTotal] = useState<number>(0);
     const [total, setTotal] = useState<number>(0);
     const [trayItems, setTrayItems] = useState<any>([]);
+    const [address, setAddress] = useState<number>(0);
     
 
     useEffect(()=>{
@@ -95,10 +100,12 @@ export default function TrayItemsProvider({ children }: { children: ReactNode })
                 setAditional,
                 sendBurgerToTray,
                 removeBurger,
+                setAddress,
                 aditional,
                 subTotal,
                 total,
-                trayItems
+                trayItems,
+                address
             }
         }>
             {children}

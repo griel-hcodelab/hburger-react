@@ -1,0 +1,60 @@
+.addresses {
+    flex-direction: column;
+    padding: 10px;
+    @media (min-width: 768px) {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, 365px);
+        justify-content: center;
+    }
+}
+
+.address {
+    background-color: #202626;
+    color: #fff;
+    margin: 10px;
+    padding: 20px;
+    border-radius: 5px;
+    flex-direction: row;
+    justify-content: space-between;
+    flex: 1 1 100px;
+    outline: 1px solid #747474;
+    p {
+        margin: 0;
+    }
+    button {
+        height: 40px;
+        width: 150px;
+        margin: 5px;
+        border-radius: 5px;
+        border: none;
+    }
+    @media (min-width: 768px) {
+        max-width: 350px;
+    }
+}
+
+.wrap {
+    justify-content: center;
+    &:nth-child(2) {
+        justify-content: space-between;
+        align-items: center;
+    }
+}
+
+.select_address_p {
+    color: #333;
+    font-weight: 100;
+    text-align: center;
+}
+
+.select_address {
+    border: none;
+    border-bottom: 1px solid #dd0e0e;
+    padding-bottom: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    outline: none;
+    font-weight: bold;
+    margin-bottom: 30px;
+}
