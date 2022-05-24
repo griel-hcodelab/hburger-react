@@ -4,14 +4,11 @@ import React, { useEffect, useState } from "react";
 import "cropperjs/dist/cropper.css";
 import { MetaTitle } from "../Components/Header/MetaTitle";
 import axios from "axios";
-import router, { useRouter } from "next/router";
+import { useRouter } from "next/router";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useAuth } from "../Context/AuthContext";
 import Link from "next/link";
 import { Toast } from "../Components/Toast";
-import { MeResponse } from "../Types/Auth/MeResponse";
-import { redirectToAuth } from "../utils/redirectToAuth";
-import { withAuthentication } from "../utils/withAuthentication";
 import { User } from "../Types/Auth/User";
 import { IMaskInput } from "react-imask";
 
