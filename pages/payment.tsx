@@ -9,12 +9,13 @@ import { Title } from "../Components/Title";
 import { isCNPJ } from "../utils/isCNPJ";
 import { isCPF } from "../utils/isCPF";
 import { get } from 'lodash'
-import axios from "axios";
 import { useRouter } from "next/router";
 import { withIronSessionSsr } from "iron-session/next";
 import { sessionOptions } from "../utils/session";
 import { Order } from "../Types/Orders/OrderType";
 import { useAuth } from "../Context/AuthContext";
+import axios from "axios";
+import { Toast } from "../Components/Toast";
 
 type CarteType = {
     installments: number;
@@ -94,6 +95,8 @@ const ComponentPage: NextPage<ComponentPageProps> = ({ amount, orderId }) => {
     const [installmentOptions, setInstallmentOptions] = useState<InstallmentOptions[]>([])
     const [paymentMethodId, setPaymentMethodId] = useState('');
     const [paymentTypeId, setPaymentTypeId] = useState('');
+    const [toastType, setToastType] = useState<'success' | 'danger'>('danger');
+    const [toastIsOpen, setToastOpen] = useState(false);
 
     const initMercadoPago = () => {
 
@@ -244,6 +247,21 @@ const ComponentPage: NextPage<ComponentPageProps> = ({ amount, orderId }) => {
 
     }
 
+    useEffect(() => {
+
+        if (Object.keys(errors).length) {
+            setToastType('danger');
+            setToastOpen(true);
+        } else {
+            setToastOpen(false);
+        }
+
+        setTimeout(() => {
+            setToastOpen(false);
+        }, 2000);
+
+    }, [errors]);
+
     return (
         <section>
             <Header />
@@ -337,12 +355,11 @@ const ComponentPage: NextPage<ComponentPageProps> = ({ amount, orderId }) => {
                             <label htmlFor="card-document">CPF ou CNPJ do Titular do Cartão</label>
                         </div>
 
-
-                        <div id="alert">
-                            {Object.keys(errors).map((error) => (
+                        <Toast type={toastType} open={toastIsOpen}>
+                                <p>{Object.keys(errors).map((error) => (
                                 get(error, `${error}.message`, 'Verifique os dados selecionados')
-                            ))}
-                        </div>
+                            ))}</p>
+                        </Toast>
                         <footer>
                             <button type="submit" id="paymentBtn">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
