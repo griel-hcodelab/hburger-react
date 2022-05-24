@@ -11,6 +11,11 @@ import styles from './addresses.module.scss';
 const NewButtonDiv = styled.div`
     display: flex;
     align-items: center;
+    flex-direction: column;
+    @media (min-width: 768px) {
+        flex-direction: row;
+        justify-content: space-around;
+    }
 `
 
 export const Addresses = () => {
@@ -57,6 +62,7 @@ export const Addresses = () => {
 
             <NewButtonDiv>
                 <Button tag="a" href="/new-address" value="NOVO ENDEREÇO" />
+                <Button tag="a" href="/" value="PÁGINA INICIAL" />
             </NewButtonDiv>
 
             <div id="addresses" className={styles.addresses}>
